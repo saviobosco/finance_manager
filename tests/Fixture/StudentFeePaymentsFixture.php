@@ -44,8 +44,8 @@ class StudentFeePaymentsFixture extends TestFixture
         [
             'id' => 1,
             'student_fee_id' => 1,
-            'amount_paid' => 1.5,
-            'amount_remaining' => 1.5,
+            'amount_paid' => 15000,
+            'amount_remaining' => 5000,
             'created' => '2017-09-18 14:40:04',
             'modified' => '2017-09-18 14:40:04',
             'created_by' => '96a1ce26-0a4a-4c4a-984f-48b8a33d88f5',

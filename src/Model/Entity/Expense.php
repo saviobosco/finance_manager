@@ -7,7 +7,7 @@ use Cake\ORM\Entity;
  * Expense Entity
  *
  * @property int $id
- * @property string $expenditure_id
+ * @property int $expenditure_id
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  *

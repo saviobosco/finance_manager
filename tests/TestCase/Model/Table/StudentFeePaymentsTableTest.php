@@ -88,4 +88,9 @@ class StudentFeePaymentsTableTest extends TestCase
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
+
+    public function testSavePayment()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
 }

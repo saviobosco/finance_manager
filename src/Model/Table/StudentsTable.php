@@ -143,9 +143,7 @@ class StudentsTable extends Table
 
     public function getStudentFees($student_id)
     {
-        $studentFeesTable = TableRegistry::get('StudentFees');
-
-        return $studentFees = $studentFeesTable->find('all')
+        return $studentFees = $this->StudentFees->find('all')
             ->contain(['Fees.FeeCategories' => function ($q) {
                 return
                     $q->select(['FeeCategories.id','FeeCategories.type']);

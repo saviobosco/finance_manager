@@ -39,7 +39,7 @@ class ReceiptsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'ref_number' => 1,
+            'ref_number' => 234564,
             'created' => '2017-09-18 17:25:26',
             'modified' => '2017-09-18 17:25:26'
         ],

@@ -42,10 +42,10 @@ class StudentFeesFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'student_id' => 'Lorem ipsum dolor sit amet',
+            'student_id' => '1',
             'fee_id' => 1,
             'paid' => 1,
-            'amount_remaining' => 1.5,
+            'amount_remaining' => 5000,
             'created' => '2017-09-18 00:02:57',
             'modified' => '2017-09-18 00:02:57'
         ],

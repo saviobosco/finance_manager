@@ -45,13 +45,13 @@ class ExpendituresFixture extends TestFixture
         [
             'id' => 1,
             'expenditure_categories_id' => 1,
-            'purpose' => 'Lorem ipsum dolor sit amet',
+            'purpose' => 'Buying small food items for the students',
             'date' => '2017-09-18',
             'created' => '2017-09-18 21:33:39',
             'modified' => '2017-09-18 21:33:39',
             'created_by' => '1c693358-8d98-4d1b-97c4-a051760ab75a',
             'modified_by' => 'cb6f37b4-f9a1-4331-991a-e1b7c3d5f73d',
-            'amount' => 1.5
+            'amount' => 145000.0
         ],
     ];
 }

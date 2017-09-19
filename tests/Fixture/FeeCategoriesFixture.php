@@ -39,7 +39,7 @@ class FeeCategoriesFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'type' => 'Lorem ipsum dolor sit amet',
+            'type' => 'School Fees',
             'created' => '2017-09-17 23:55:00',
             'modified' => '2017-09-17 23:55:00'
         ],

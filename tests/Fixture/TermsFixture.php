@@ -41,7 +41,7 @@ class TermsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'term' => 'Lorem ipsum dolor ',
+            'term' => 'First Term',
             'created' => '2017-09-17 22:38:27',
             'modified' => '2017-09-17 22:38:27',
             'created_by' => 'bc00f7f9-fcb5-40ea-a94f-084bb7f055a8',

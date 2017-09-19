@@ -46,7 +46,7 @@ class FeesFixture extends TestFixture
         [
             'id' => 1,
             'fee_category_id' => 1,
-            'amount' => 1.5,
+            'amount' => 45000,
             'term_id' => 1,
             'class_id' => 1,
             'session_id' => 1,

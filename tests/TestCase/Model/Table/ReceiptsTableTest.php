@@ -79,4 +79,9 @@ class ReceiptsTableTest extends TestCase
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
+
+    public function testGenerateReceipt()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
 }

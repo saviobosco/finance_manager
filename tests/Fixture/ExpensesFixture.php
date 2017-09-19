@@ -18,7 +18,7 @@ class ExpensesFixture extends TestFixture
     // @codingStandardsIgnoreStart
     public $fields = [
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
-        'expenditure_id' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'collate' => 'utf8_bin', 'comment' => '', 'precision' => null, 'fixed' => null],
+        'expenditure_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         '_constraints' => [
@@ -39,9 +39,9 @@ class ExpensesFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'expenditure_id' => 'Lorem ipsum dolor sit amet',
-            'created' => '2017-09-18 21:23:39',
-            'modified' => '2017-09-18 21:23:39'
+            'expenditure_id' => 1,
+            'created' => '2017-09-19 12:31:58',
+            'modified' => '2017-09-19 12:31:58'
         ],
     ];
 }

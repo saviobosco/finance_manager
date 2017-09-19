@@ -84,4 +84,14 @@ class StudentsTableTest extends TestCase
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
+
+    public function testGetStudentFees()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    public function testGetReceiptDetails()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
 }

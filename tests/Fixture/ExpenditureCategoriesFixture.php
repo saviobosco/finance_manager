@@ -39,7 +39,13 @@ class ExpenditureCategoriesFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'type' => 'Lorem ipsum dolor sit amet',
+            'type' => 'Feeding',
+            'created' => '2017-09-18 21:23:13',
+            'modified' => '2017-09-18 21:23:13'
+        ],
+        [
+            'id' => 2,
+            'type' => 'Medicals',
             'created' => '2017-09-18 21:23:13',
             'modified' => '2017-09-18 21:23:13'
         ],

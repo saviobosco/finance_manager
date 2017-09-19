@@ -52,7 +52,7 @@ class StudentsFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => 'c8a166b0-d047-437a-b19d-85380fa90b64',
+            'id' => '1',
             'first_name' => 'Lorem ipsum dolor sit amet',
             'last_name' => 'Lorem ipsum dolor sit amet',
             'date_of_birth' => '2017-09-17',
