@@ -42,6 +42,8 @@ class AppController extends Controller
     public function initialize()
     {
         parent::initialize();
+        // for the footprint
+        $this->_userModel = 'Accounts';
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
@@ -63,10 +65,18 @@ class AppController extends Controller
      */
     public function beforeRender(Event $event)
     {
+        $this->_detectLayout();
         if (!array_key_exists('_serialize', $this->viewVars) &&
             in_array($this->response->type(), ['application/json', 'application/xml'])
         ) {
             $this->set('_serialize', true);
+        }
+    }
+
+    protected function _detectLayout()
+    {
+        if(!empty($this->request->session()->read('Auth.User.id'))  && !$this->request->getParam('controller') !== 'Pages' ) {
+            return $this->viewBuilder()->setLayout('loggedIn');
         }
     }
 }

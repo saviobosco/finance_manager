@@ -67,6 +67,10 @@ class StudentsTable extends Table
         $this->hasMany('StudentFees', [
             'foreignKey' => 'student_id'
         ]);
+
+        $this->hasMany('Receipts', [
+            'foreignKey' => 'student_id'
+        ]);
     }
 
     /**
@@ -143,23 +147,79 @@ class StudentsTable extends Table
 
     public function getStudentFees($student_id)
     {
-        return $studentFees = $this->StudentFees->find('all')
+        /*return $this->StudentFees->Fees->find('all')
+            ->contain([
+                'FeeCategories' => function ($q) {
+                    return $q->select(['FeeCategories.id','FeeCategories.type']);
+                },
+                'StudentFees' => function ($q) use ($student_id){
+                    return $q->where(['student_id'=>$student_id,'paid'=>0]);
+                }
+            ])->groupBy('session_id')->toArray();*/
+
+        $studentFees = $this->StudentFees->find('all')
             ->contain(['Fees.FeeCategories' => function ($q) {
                 return
                     $q->select(['FeeCategories.id','FeeCategories.type']);
                     $q->orderDesc('Fees.created');
-            }])->where(['student_id'=>$student_id,'paid'=>0])->toArray();
+            }])->where(['student_id'=>$student_id,'paid'=>0]);
+
+        return $studentFees/*->groupBy('fee.session_id')*/->toArray();
     }
+
+    public function getStudentFeesWithTermClassSession($student_id,$term_id,$class_id,$session_id)
+    {
+        $studentFees = $this->StudentFees->find('all')
+            ->contain(['Fees.FeeCategories' => function ($q) use ($term_id,$class_id,$session_id) {
+                if ( empty($term_id) ) {
+                    return
+                        $q->select(['FeeCategories.id','FeeCategories.type'])
+                            ->where(['Fees.class_id' => $class_id,'Fees.session_id' => $session_id])
+                            ->orderDesc('Fees.created');
+                } else {
+                    return
+                        $q->select(['FeeCategories.id','FeeCategories.type'])
+                            ->where(['Fees.class_id' => $class_id,'Fees.session_id' => $session_id,'Fees.term_id' => $term_id ])
+                            ->orderDesc('Fees.created');
+                }
+
+            }])->where(['student_id'=>$student_id,'paid'=>0]);
+
+        return $studentFees->toArray();
+    }
+
 
     public function getReceiptDetails($receipt_id)
     {
         $receiptsTable = TableRegistry::get('Receipts');
         return $receiptDetails = $receiptsTable->find('all')->contain([
+            'Payments',
             'StudentFeePayments.StudentFees.Fees.FeeCategories' => function($q) {
                 return
                     $q->select(['FeeCategories.id','FeeCategories.type']);
                     $q->orderDesc('Fees.created');
             }
         ])->where(['Receipts.id'=>$receipt_id])->first();
+    }
+
+    public function getStudentsWithId( $id )
+    {
+        return $this->find('all')->contain(['Classes'])->where(['Students.id'=>$id])->toArray();
+    }
+
+    public function getStudentArrears($student_id)
+    {
+        return $studentFees = $this->StudentFees->find('all')
+            ->contain(['Fees.FeeCategories' => function ($q) {
+                return
+                    $q->select(['FeeCategories.id','FeeCategories.type']);
+                $q->orderDesc('Fees.created');
+            }
+            ])->where(['student_id'=>$student_id,'paid'=>0])->toArray();
+    }
+
+    public function getStudentPaymentReceipts()
+    {
+
     }
 }

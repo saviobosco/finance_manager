@@ -32,7 +32,7 @@ $config = [
         ],
         'Registration' => [
             // determines if the register is enabled
-            'active' => true,
+            'active' => false,
             // determines if the reCaptcha is enabled for registration
             'reCaptcha' => true,
             // allow a logged in user to access the registration form
@@ -131,6 +131,12 @@ $config = [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',
             'action' => 'login',
+            'prefix' => false
+        ],
+        'loginRedirect' => [
+            'plugin' => null,
+            'controller' => 'Accounts',
+            'action' => 'home',
             'prefix' => false
         ],
         'authenticate' => [

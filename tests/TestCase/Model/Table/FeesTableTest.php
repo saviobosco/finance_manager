@@ -30,8 +30,17 @@ class FeesTableTest extends TestCase
         'app.classes',
         'app.students',
         'app.sessions',
-        'app.student_fees'
+        'app.student_fees',
+        'app.student_fee_payments',
+        'app.receipts',
+        'app.payments',
+        'app.bank_deposits',
     ];
+
+    public static function setUpBeforeClass()
+    {
+        fwrite(STDOUT, __METHOD__ . "\n");
+    }
 
     /**
      * setUp method
@@ -83,6 +92,146 @@ class FeesTableTest extends TestCase
      * @return void
      */
     public function testBuildRules()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test createFee method
+     *
+     * @return void
+     */
+    public function testCreateFee()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test checkIfFeeExistingForTermClassSession method
+     *
+     * @return void
+     */
+    public function testCheckIfFeeExistingForTermClassSession()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test createStudentsFeeRecordByClass method
+     *
+     * @return void
+     */
+    public function testCreateStudentsFeeRecordByClass()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test createNewFee method
+     *
+     * @return void
+     */
+    public function testCreateNewFee()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test getFeeDefaulters method
+     *
+     * @return void
+     */
+    public function testGetFeeDefaulters()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test getStudentsData method
+     *
+     * @return void
+     */
+    public function testGetStudentsData()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test getFeeWithClassSessionTerm method
+     *
+     * @return void
+     */
+    public function testGetFeeWithClassSessionTerm()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test createStudentsFeeRecord method
+     *
+     * @return void
+     */
+    public function testCreateStudentsFeeRecord()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test getFeeDefaultersByFeeId method
+     *
+     * @return void
+     */
+    public function testGetFeeDefaultersByFeeId()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test getFeeCompleteStudentsByFeeId method
+     *
+     * @return void
+     */
+    public function testGetFeeCompleteStudentsByFeeId()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test getStudentWithCompleteFees method
+     *
+     * @return void
+     */
+    public function testGetStudentWithCompleteFees()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test getCompulsoryFeesByParameters method
+     *
+     * @return void
+     */
+    public function testGetCompulsoryFeesByParameters()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test queryFeesTable method
+     *
+     * @return void
+     */
+    public function testQueryFeesTable()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test getFeeCategoriesData method
+     *
+     * @return void
+     */
+    public function testGetFeeCategoriesData()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

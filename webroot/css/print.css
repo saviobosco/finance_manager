@@ -1,0 +1,96 @@
+.banner-image img {
+    width: 100%;
+    max-width: 100%;
+    height: 100px;
+}
+.profile-picture img {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    left: 40%;
+}
+/*-----------------------
+ Result Table
+ ------------------------*/
+.table-result {
+
+}
+table {
+    border: 1px black solid;
+    color: black;
+}
+tr,td {
+    border: 1px black solid;
+}
+td,th {
+    padding: 2px 2px;
+}
+thead tr td {
+    padding: 0;
+}
+td.text-right {
+    text-align: right;
+}
+.table-result thead tr.bigger-height {
+    height: 80px;
+}
+.table-result thead tr.bigger-height th {
+    text-align: center;
+    width: 1px;
+    border-bottom-width: 2px;
+}
+.table-result thead tr th {
+    text-align: center;
+    padding: 0;
+}
+.table-result thead tr th div {
+    transform: rotate(-90deg);
+    margin-top: -50px;
+    font-size: 9px;
+}
+.table-result thead tr th p {
+    margin: 0;
+}
+.table-result > tbody > tr > td {
+    padding: 0px;
+}
+.table-result thead tr.bigger-height th:first-child {
+    width: 200px;
+}
+.table-skill-score {
+    width: 200px !important;
+    font-size: 10px;
+}
+.result-details-table {
+    font-size: 10px;
+}
+.result-details-table > tbody > tr > td,.result-details-table > tbody > tr > th {
+    border-top: 0px;
+}
+.result-details-table tbody > tr > td {
+    border-bottom: 1px solid #ddd;
+}
+.result-details-table .name {
+    font-size: 16px;
+    padding-bottom: 0px;
+}
+
+@media print {
+    header,nav,footer,.footer,.footer-copyright,.sidebar,.btn,form,input,.panel-student-search{
+        display: none;
+    }
+    @page {
+        margin: 0.1cm;
+    }
+    .col-xs-11 {
+        width: 80%;
+        padding-right: 0;
+        padding-left: 0;
+    }
+    .col-xs-1 {
+        width: 20%;
+    }
+    .content {
+        margin: 0;
+    }
+}

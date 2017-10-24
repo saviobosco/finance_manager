@@ -212,6 +212,16 @@ Type::build('timestamp')
  * Plugin::load('Migrations'); //Loads a single plugin named Migrations
  *
  */
+try {
+    Configure::load('application', 'default');
+} catch (\Exception $e) {
+    Log::alert('application configuration file could not be loaded');
+}
+use App\Event\PaymentsStatistic;
+use Cake\Event\EventManager;
+
+EventManager::instance()->on(new PaymentsStatistic());
+
 
 /*
  * Only try to load DebugKit in development mode
@@ -225,3 +235,5 @@ Configure::write('Users.config', ['users']);
 Plugin::load('CakeDC/Users', ['routes' => true, 'bootstrap' => true]);
 
 Plugin::load('Muffin/Footprint');
+
+Plugin::load('StudentsManager', ['bootstrap' => false, 'routes' => true]);

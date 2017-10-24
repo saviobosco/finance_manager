@@ -36,7 +36,7 @@ class FeeCategoriesController extends AppController
     public function view($id = null)
     {
         $feeCategory = $this->FeeCategories->get($id, [
-            'contain' => ['Fees']
+            'contain' => ['Fees.Sessions','Fees.Classes','Fees.Terms']
         ]);
 
         $this->set('feeCategory', $feeCategory);

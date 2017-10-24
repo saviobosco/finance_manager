@@ -63,4 +63,12 @@ class FeeCategoriesTable extends Table
 
         return $validator;
     }
+
+    public function findIncomeByFeeCategories()
+    {
+        return $this->find('all')
+            ->select(['id','type','income_amount'])
+            ->toArray();
+    }
+
 }

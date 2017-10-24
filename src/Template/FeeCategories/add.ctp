@@ -3,22 +3,24 @@
   * @var \App\View\AppView $this
   */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('List Fee Categories'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Fees'), ['controller' => 'Fees', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Fee'), ['controller' => 'Fees', 'action' => 'add']) ?></li>
-    </ul>
-</nav>
-<div class="feeCategories form large-9 medium-8 columns content">
-    <?= $this->Form->create($feeCategory) ?>
-    <fieldset>
-        <legend><?= __('Add Fee Category') ?></legend>
-        <?php
-            echo $this->Form->control('type');
-        ?>
-    </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
-    <?= $this->Form->end() ?>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <h4 class="panel-title"> Add New Fee Category </h4>
+            </div>
+            <div class="panel-body">
+                <?= $this->Form->create($feeCategory) ?>
+                <fieldset>
+                    <legend><?= __('Add Fee Category') ?></legend>
+                    <?php
+                    echo $this->Form->control('type',['label'=>'Name']);
+                    echo $this->Form->control('description',['type'=>'textarea','label'=>'Description']);
+                    ?>
+                </fieldset>
+                <?= $this->Form->button(__('Create'),['class'=>'btn btn-primary']) ?>
+                <?= $this->Form->end() ?>
+            </div>
+        </div>
+    </div>
 </div>

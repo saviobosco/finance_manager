@@ -36,5 +36,10 @@ class AppView extends View
      */
     public function initialize()
     {
+        $this->loadHelper('Site');
+        $this->loadHelper('Currency');
+        $this->loadHelper('Payment');
+        $this->loadHelper('SearchParameter');
+        $this->loadHelper('Form',['templates'=>'bootstrap_form_templates']);
     }
 }

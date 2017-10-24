@@ -7,11 +7,16 @@ use Cake\ORM\Entity;
  * Receipt Entity
  *
  * @property int $id
+ * @property int $student_id
  * @property int $ref_number
+ * @property $created_by_user
+ * @property $modified_by_user
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  *
  * @property \App\Model\Entity\StudentFeePayment[] $student_fee_payments
+ * @property \App\Model\Entity\Payment $payment
+ * @property \App\Model\Entity\Student $student
  */
 class Receipt extends Entity
 {

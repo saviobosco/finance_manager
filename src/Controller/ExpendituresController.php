@@ -21,7 +21,9 @@ class ExpendituresController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['ExpenditureCategories']
+            'contain' => [
+                'ExpenditureCategories'
+            ]
         ];
         $expenditures = $this->paginate($this->Expenditures);
 
@@ -39,7 +41,23 @@ class ExpendituresController extends AppController
     public function view($id = null)
     {
         $expenditure = $this->Expenditures->get($id, [
-            'contain' => ['ExpenditureCategories', 'Expenses']
+            'contain' => [
+                'ExpenditureCategories',
+                'CreatedByUser'=>[
+                    'fields'=>[
+                        'id',
+                        'first_name',
+                        'last_name'
+                    ]
+                ],
+                'ModifiedByUser'=>[
+                    'fields'=>[
+                        'id',
+                        'first_name',
+                        'last_name'
+                    ]
+                ]
+            ]
         ]);
 
         $this->set('expenditure', $expenditure);

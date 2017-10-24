@@ -17,7 +17,7 @@ class StudentsControllerTest extends IntegrationTestCase
      */
     public $fixtures = [
         'app.students',
-        'app.states',
+        //'app.states',
         'app.sessions',
         'app.classes',
         'app.student_fees'

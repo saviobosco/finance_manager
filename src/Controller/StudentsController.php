@@ -2,12 +2,19 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Form\PayFeesForm;
+use Cake\Datasource\Exception\RecordNotFoundException;
 
 /**
  * Students Controller
  *
  * @property \App\Model\Table\StudentsTable $Students
  * @property \App\Model\Table\StudentFeePaymentsTable $StudentFeePayments
+ * @property \App\Model\Table\PaymentTypesTable $PaymentTypes
+ * @property \App\Model\Table\ReceiptsTable $Receipts
+ * @property \App\Model\Table\PaymentsTable $Payments
+ * @property \App\Model\Table\TermsTable $Terms
+ * @property \App\Model\Table\BanksTable $Banks
  *
  * @method \App\Model\Entity\Student[] paginate($object = null, array $settings = [])
  */
@@ -21,12 +28,35 @@ class StudentsController extends AppController
      */
     public function index()
     {
-        $this->paginate = [
-            'contain' => [/*'States',*/ 'Sessions', 'Classes']
-        ];
+        if ( empty($this->request->getQuery('class_id'))) {
+            $this->paginate = [
+                'limit' => 1000,
+                'maxLimit' => 1000,
+                'contain' => ['Sessions', 'Classes'],
+                'conditions' => [
+                    'Students.status'   => 1,
+                ],
+                // Place the result in ascending order according to the class.
+                'order' => [
+                    'class_id' => 'asc'
+                ]
+            ];
+        }
+        else {
+            $this->paginate = [
+                'limit' => 1000,
+                'maxLimit' => 1000,
+                'contain' => ['Sessions', 'Classes'],
+                'conditions' => [
+                    'Students.status'   => 1,
+                    'Students.class_id' => $this->request->getQuery('class_id')
+                ]
+            ];
+        }
         $students = $this->paginate($this->Students);
-
-        $this->set(compact('students'));
+        $sessions = $this->Students->Sessions->find('list',['limit' => 200]);
+        $classes = $this->Students->Classes->find('list',['limit' => 200]);
+        $this->set(compact('students','sessions','classes'));
         $this->set('_serialize', ['students']);
     }
 
@@ -39,13 +69,24 @@ class StudentsController extends AppController
      */
     public function view($id = null)
     {
-        $student = $this->Students->get($id, [
-            'contain' => [ 'Sessions', 'Classes', 'StudentFees.Fees.FeeCategories']
-        ]);
-        $sessions = $this->Students->Sessions->find('list', ['limit' => 200])->toArray();
-        $classes = $this->Students->Classes->find('list', ['limit' => 200])->toArray();
-        $this->set(compact('student','sessions','classes'));
-        $this->set('_serialize', ['student']);
+        $getData = $this->request->getQuery();
+        try {
+            $student = $this->Students->get($getData['student_id'], [
+                'contain' => [ 'Sessions', 'Classes', 'StudentFees.Fees.FeeCategories']
+            ]);
+
+            //$paymentReceipts = $this->Students->getStudentPaymentReceipts($student->id);
+
+            $sessions = $this->Students->Sessions->find('list', ['limit' => 200])->toArray();
+            $classes = $this->Students->Classes->find('list', ['limit' => 200])->toArray();
+            $this->loadModel('Terms');
+            $terms = $this->Terms->find('list', ['limit' => 200])->toArray();
+            $this->set(compact('student','sessions','classes','terms'));
+            $this->set('_serialize', ['student']);
+        } catch ( RecordNotFoundException $e ) {
+            $this->render('/Element/recordNotFound');
+        }
+
     }
 
     /**
@@ -81,23 +122,35 @@ class StudentsController extends AppController
      */
     public function edit($id = null)
     {
-        $student = $this->Students->get($id, [
-            'contain' => []
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $student = $this->Students->patchEntity($student, $this->request->getData());
-            if ($this->Students->save($student)) {
-                $this->Flash->success(__('The student has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
+        try {
+            /**
+             * if no argument is specified redirect to the index action
+             */
+            if (empty($id)) {
+                $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The student could not be saved. Please, try again.'));
+            $student = $this->Students->get($id, [
+                'contain' => []
+            ]);
+
+            if ($this->request->is(['patch', 'post', 'put'])) {
+                $student = $this->Students->patchEntity($student, $this->request->getData());
+                if ( $this->Students->save($student) ) {
+                    $this->Flash->success(__('The student has been saved.'));
+
+                    //return $this->redirect(['action' => 'index']);
+                } else {
+                    $this->Flash->error(__('The student could not be saved. Please, try again.'));
+                }
+            }
+            $sessions = $this->Students->Sessions->find('list', ['limit' => 200]);
+            $classes = $this->Students->Classes->find('list', ['limit' => 200]);
+            $this->set(compact('student', 'sessions', 'classes', 'classDemarcations','states'));
+            $this->set('_serialize', ['student']);
+
+        } catch ( RecordNotFoundException $e ) {
+            $this->render('/Element/recordNotFound');
         }
-        $states = $this->Students->States->find('list', ['limit' => 200]);
-        $sessions = $this->Students->Sessions->find('list', ['limit' => 200]);
-        $classes = $this->Students->Classes->find('list', ['limit' => 200]);
-        $this->set(compact('student', 'states', 'sessions', 'classes'));
-        $this->set('_serialize', ['student']);
     }
 
     /**
@@ -120,48 +173,140 @@ class StudentsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
-    public function payFees($id = null)
+    public function getStudentFees()
     {
-        $studentFees = $this->Students->getStudentFees($id);
+        $getQuery = $this->request->getQuery();
+        if (!array_key_exists('student_id',$getQuery) || empty($getQuery['student_id'])) {
+            return $this->render('/Element/noRecordFound');
+        }
 
-        if ( $this->request->is(['patch', 'post', 'put'])) {
-            $this->loadModel('StudentFeePayments');
-            $newEntities = $this->StudentFeePayments->newEntities($this->request->getData());
+        $student = $this->Students->get($getQuery['student_id'],[
+            'contain' => ['Classes','Sessions']
+        ]);
 
-            $receipt_id = $this->StudentFeePayments->savePayment($newEntities);
-
-            if ( $receipt_id) {
-                $this->Flash->success(__('Payment was successfully made '));
-
-                return $this->redirect([
-                    'plugin'=>null,
-                    'controller'=>'Students',
-                    'action'=>'paymentReceipt',
-                    '?' => [
-                        'student_id' => $id,
-                        'receipt_id' => $receipt_id
-                    ]
-                ]);
-
-            } else {
-                $this->Flash->error(__('Payment could not be made'));
-            }
+        if ( isset($getQuery['term_id']) OR isset($getQuery['class_id']) OR isset($getQuery['session_id'])) {
+            $studentFees = $this->Students->getStudentFeesWithTermClassSession($getQuery['student_id'],$getQuery['term_id'],$getQuery['class_id'],$getQuery['session_id']);
+        } else {
+            $studentFees = $this->Students->getStudentFees($getQuery['student_id']);
         }
 
         $sessions = $this->Students->Sessions->find('list', ['limit' => 200])->toArray();
         $classes = $this->Students->Classes->find('list', ['limit' => 200])->toArray();
-        $this->set(compact('studentFees','sessions','classes'));
+        $this->loadModel('Terms');
+        $this->loadModel('PaymentTypes');
+        $this->loadModel('Banks');
+        $paymentTypes = $this->PaymentTypes->find('list', ['limit' => 200]);
+        $terms = $this->Terms->find('list', ['limit' => 200])->toArray();
+        $this->set(compact('student','studentFees','sessions','classes','terms','paymentTypes'));
     }
+
+
+    public function payFees()
+    {
+        if ( $this->request->is(['patch', 'post', 'put'])) {
+            //debug($this->request->getData()); exit;
+            $this->loadModel('StudentFeePayments');
+
+            $postData = $this->request->getData();
+
+            $newStudentFeeEntities = $this->StudentFeePayments->newEntities($postData['student_fees']);
+
+            // Process data and get total amount paid
+            $studentPaymentDetails = $this->StudentFeePayments->processPaymentData($newStudentFeeEntities);
+            if ( empty($studentPaymentDetails['paymentData']) ) {
+                $this->Flash->error(__('No payment amount was entered for payment'));
+                return $this->redirect($this->referer());
+            }
+
+            // generate receipt
+            $this->loadModel('Receipts');
+            $receiptDetail = $this->Receipts->generateReceipt($postData['student_id'],$studentPaymentDetails['total']);
+            // generate and save payment records
+            $postData['payment']['receipt_id'] = $receiptDetail->id;
+            $postData['payment']['payment_received_by'] = $this->Auth->user('id');
+            if (!$this->StudentFeePayments->savePayment($studentPaymentDetails['paymentData'],$receiptDetail,$postData['payment'])) {
+                $this->Flash->error(__('Could not save the payment details please try again.'));
+                // revert the receipt generated
+                return $this->redirect($this->referer());
+            }
+            return $this->redirect([
+                'plugin'=>null,
+                'controller'=>'Students',
+                'action'=>'paymentReceipt',
+                '?' => [
+                    'receipt_id' => $receiptDetail->id,
+                ]
+            ]);
+        }
+    }
+
 
     public function paymentReceipt($id = null )
     {
         //get the student information
         $passedData = $this->request->getQuery();
-        $student = $this->Students->get($passedData['student_id']);
-
         // get the receipt information
         $receiptDetails = $this->Students->getReceiptDetails($passedData['receipt_id']);
 
-        $this->set(compact('student','receiptDetails'));
+        $student = $this->Students->get($receiptDetails->student_id,[
+            'contain' => ['Classes','Sessions']
+        ]);
+        //get Student Arrears
+        $arrears = $this->Students->getStudentArrears($receiptDetails->student_id);
+
+        $sessions = $this->Students->Sessions->find('list', ['limit' => 200])->toArray();
+        $classes = $this->Students->Classes->find('list', ['limit' => 200])->toArray();
+        $this->loadModel('Terms');
+        $terms = $this->Terms->find('list', ['limit' => 200])->toArray();
+        $this->set(compact('student','receiptDetails','sessions','classes','terms','arrears'));
+    }
+
+
+    public function getStudentByAjax()
+    {
+        if ( $this->request->is('ajax') ) {
+            $student_id = $this->request->getQuery('id');
+            $students = $this->Students->getStudentsWithId($student_id);
+            $this->set('students',$students);
+            $this->render('/Element/get_student_ajax_return','ajax');
+        }
+    }
+
+    public function getStudentBill()
+    {
+        $getQuery = $this->request->getQuery();
+        if (!array_key_exists('student_id',$getQuery) || empty($getQuery['student_id'])) {
+            return $this->render('/Element/noRecordFound');
+        }
+
+        $student = $this->Students->get($getQuery['student_id'],[
+            'contain' => ['Classes','Sessions']
+        ]);
+
+        if ( isset($getQuery['term_id']) OR isset($getQuery['class_id']) OR isset($getQuery['session_id'])) {
+            $studentFees = $this->Students->getStudentFeesWithTermClassSession($getQuery['student_id'],$getQuery['term_id'],$getQuery['class_id'],$getQuery['session_id']);
+        } else {
+            $studentFees = $this->Students->getStudentFees($getQuery['student_id']);
+        }
+
+        $sessions = $this->Students->Sessions->find('list', ['limit' => 200])->toArray();
+        $classes = $this->Students->Classes->find('list', ['limit' => 200])->toArray();
+        $this->loadModel('Terms');
+        $this->loadModel('PaymentTypes');
+        $this->loadModel('Banks');
+        $paymentTypes = $this->PaymentTypes->find('list', ['limit' => 200]);
+        $terms = $this->Terms->find('list', ['limit' => 200])->toArray();
+        $this->set(compact('student','studentFees','sessions','classes','terms','paymentTypes'));
+    }
+
+    // this is an ajax function
+    public function getStudentsCountByClassId()
+    {
+        if ( $this->request->is('ajax') ) {
+            $class_id = $this->request->getQuery('class_id');
+            $students = $this->Students->find('all')->where(['class_id'=>$class_id]);
+            $this->response->body($students->count());
+            return $this->response;
+        }
     }
 }

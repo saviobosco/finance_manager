@@ -1,6 +1,8 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Event\Event;
+use Cake\I18n\Date;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -54,6 +56,17 @@ class ExpendituresTable extends Table
             'foreignKey' => 'expenditure_categories_id',
             'joinType' => 'INNER'
         ]);
+
+        $this->belongsTo('CreatedByUser',[
+            'className' => 'Accounts',
+            'foreignKey' => 'created_by'
+        ]);
+
+        $this->belongsTo('ModifiedByUser',[
+            'className' => 'Accounts',
+            'foreignKey' => 'modified_by'
+        ]);
+
         $this->hasMany('Expenses', [
             'foreignKey' => 'expenditure_id'
         ]);
@@ -100,5 +113,18 @@ class ExpendituresTable extends Table
         $rules->add($rules->existsIn(['expenditure_categories_id'], 'ExpenditureCategories'));
 
         return $rules;
+    }
+
+    /***
+     * @param Event $event
+     * @param $data
+     * The function is fired by the cakephp system automatically before a
+     * request data is converted to entities
+     */
+    public function beforeMarshal(Event $event, $data )
+    {
+        if ( !empty($data['date'] )) {
+            $data['date'] = new Date($data['date']); // Converts the birth date Date properly
+        }
     }
 }

@@ -74,6 +74,20 @@ class FeesTable extends Table
         $this->hasMany('StudentFees', [
             'foreignKey' => 'fee_id'
         ]);
+
+        $this->hasOne('IncomeByFees', [
+            'foreignKey' => 'fee_id'
+        ]);
+
+        $this->belongsTo('CreatedByUser',[
+            'className' => 'Accounts',
+            'foreignKey' => 'created_by'
+        ]);
+
+        $this->belongsTo('ModifiedByUser',[
+            'className' => 'Accounts',
+            'foreignKey' => 'modified_by'
+        ]);
     }
 
     /**
@@ -114,31 +128,295 @@ class FeesTable extends Table
         return $rules;
     }
 
-    public function afterSave(Event $event,EntityInterface $entity )
+    /**
+     * @param EntityInterface $fee
+     * @return \App\Model\Entity\Fee|bool
+     * This function creates the fee and returns the fee entity details
+     */
+    public function createFee(EntityInterface $fee)
     {
-        if ( $entity->isNew()) {
+        return $this->save($fee);
+    }
 
-            $studentsTable = TableRegistry::get('Students');
+    public function checkIfFeeExistingForTermClassSession(EntityInterface $fee)
+    {
+        $query = $this->find('all')->where([
+            'fee_category_id'=>$fee->fee_category_id,
+            'class_id'=>$fee->class_id,
+            'session_id' => $fee->session_id,
+            ($fee->term_id ) ? 'term_id = '.$fee->term_id : 'term_id IS NULL' // checks if the $fee->term_id is set else return the else statement.
+        ])->toArray();
+        //debug($query); exit;
+        if (!empty($query)) {
+            return true ;
+        }
+        return false;
+    }
 
-            // find all student under that fees class and session
-            $students = $studentsTable->find('all')
-                ->select(['id','class_id','session_id'])
-                ->where(['class_id'=>$entity->class_id,'session_id'=>$entity->session_id,'status' => 1])->toArray();
 
-            // iterate through the result set and create their respective fees
-            if ( $students ) {
-                //Initialize the student fees table
-                $studentFeesTable = TableRegistry::get('StudentFees');
-                foreach ( $students as $student ) {
-                    $newStudentFees = $studentFeesTable->newEntity([
-                        'student_id' => $student->id,
-                        'fee_id' => $entity->id,
-                        'paid' => 0,
-                    ]);
-                    $studentFeesTable->save($newStudentFees); // Save the student details
-                }
+
+    /**
+     * @param $fee_id
+     * @param $class_id
+     * @return bool
+     * This function is suspended for now
+     * Todo : Come back and complete
+     */
+    public function createStudentsFeeRecordByClass($fee_id,$class_id)
+    {
+        $studentsTable = TableRegistry::get('Students');
+
+        // find all student under that fees class and session
+        $students = $studentsTable->find('all')
+            ->select(['id','class_id','status'])
+            ->where(['class_id'=>$class_id,'status' => 1])->enableHydration(false);
+
+        // iterate through the result set and create their respective fees
+        if ( $students ) {
+            //Initialize the student fees table
+            $studentFeesTable = TableRegistry::get('StudentFees');
+            foreach ( $students as $student ) {
+                $newStudentFees = $studentFeesTable->newEntity([
+                    'student_id' => $student->id,
+                    'fee_id' => $fee_id,
+                    'paid' => 0,
+                ]);
+                $studentFeesTable->save($newStudentFees); // Save the student details
             }
+        }
+        return true;
+    }
+
+    // Todo : Review this algorithm later
+    public function createNewFee( EntityInterface $fee)
+    {
+        try {
+            // check if the fee exists
+            $query = $this->find('all')->where([
+                'fee_category_id'=>$fee->fee_category_id,
+                'class_id'=>$fee->class_id,
+                'session_id' => $fee->session_id,
+                ($fee->term_id ) ? 'term_id => '.$fee->term_id : 'term_id IS NULL' // checks if the $fee->term_id is set else return the else statement.
+            ])->toArray();
+            //debug($query); exit;
+            if ( !empty($query)) {
+                return ' Fees already exists ';
+            }
+
+            // save the fee
+            $fee = $this->save($fee);
+            if ($fee) {
+                $this->createStudentsFeeRecordByClass($fee->id,$fee->class_id);
+                return true;
+            }
+            return false;
+        } catch ( \Exception $e ) {
+            return $e->getTraceAsString();
         }
 
     }
+
+    public function getFeeDefaulters(Array $data )
+    {
+        $query = $this->StudentFees->find('all')
+            ->enableHydration(false)
+            ->contain([
+                'Fees',
+                'Students' => function ($q) {
+                    return $q->select(['id','first_name','last_name']);
+                }]);
+        if ( !empty($data['session_id']) ) {
+            $query->contain(['Fees'=> function ($q) use ($data) {
+                return $q->where([
+                    'Fees.session_id' => $data['session_id'],
+                ]);
+            }]);
+        }
+        if ( !empty($data['class_id']) ) {
+            $query->contain(['Fees'=> function ($q) use ($data) {
+                return $q->where([
+                    'Fees.class_id' => $data['class_id'],
+                ]);
+            }]);
+        }
+        if ( !empty($data['term_id']) ) {
+            $query->contain(['Fees'=> function ($q) use ($data) {
+                return $q->where([
+                    'Fees.term_id' => $data['term_id'],
+                ]);
+            }]);
+        }
+
+        $data = $query->where(['paid'=>0])
+            ->groupBy('student_id')
+            ->toArray();
+
+        return $data;
+
+    }
+
+    public function getStudentsData()
+    {
+        $students = $this->StudentFees->Students->find('all')
+            ->map(function($row ) {
+                $row->full_name = $row->first_name.' '.$row->last_name;
+                return $row;
+            })
+            ->combine('id','full_name')
+            ->toArray();
+        return $students;
+    }
+
+    public function getFeeWithClassSessionTerm()
+    {
+        return $this->find('all')
+            ->contain(['FeeCategories','Sessions','Classes','Terms'])
+            ->map(function ($row) {
+                $row->modifiedName = $row->fee_category->type.'--'.$row->session->session.'--'.$row->class->class.'--'.$row->term->term;
+                return $row;
+            })
+            ->combine('id','modifiedName')
+            ->toArray();
+    }
+
+    public function createStudentsFeeRecord(Array $data )
+    {
+        $fee_id = $data['fee_id'];
+        $students = $data['student_ids'];
+        // create new student_fee entity
+        $student_fee = $this->StudentFees->newEntity(['fee_id'=>$fee_id,'paid'=>0]);
+        foreach ( $students as $student ) {
+            // check if student has the record
+            if ( (bool)$this->StudentFees->find()->where(['fee_id'=>$fee_id,'student_id'=>$student])->first()) {
+                continue;
+            }
+            $student_fee->student_id = $student;
+            $this->StudentFees->save($student_fee);
+        }
+        return true;
+    }
+
+
+    public function getFeeDefaultersByFeeId($fee_id)
+    {
+        return $this->find()
+            ->contain([
+                'Terms',
+                'Classes',
+                'Sessions',
+                'FeeCategories',
+                'StudentFees' => function($q) {
+                return $q->where(['paid'=>0]);
+            }])
+            ->where(['Fees.id'=>$fee_id])->first();
+    }
+
+    public function getFeeCompleteStudentsByFeeId($fee_id)
+    {
+        return $this->find()
+            ->contain([
+                'Terms',
+                'Classes',
+                'Sessions',
+                'FeeCategories',
+                'StudentFees' => function($q) {
+                    return $q->where(['paid'=>1]);
+                }])
+            ->where(['Fees.id'=>$fee_id])->first();
+    }
+
+
+    public function getStudentWithCompleteFees(Array $data )
+    {
+        $query = $this->StudentFees->find('all')
+            ->enableHydration(false)
+            ->contain([
+                'Fees',
+                'Students' => function ($q) {
+                    return $q->select(['id','first_name','last_name']);
+                }]);
+        if ( !empty($data['session_id']) ) {
+            $query->contain(['Fees'=> function ($q) use ($data) {
+                return $q->where([
+                    'Fees.session_id' => $data['session_id'],
+                ]);
+            }]);
+        }
+        if ( !empty($data['class_id']) ) {
+            $query->contain(['Fees'=> function ($q) use ($data) {
+                return $q->where([
+                    'Fees.class_id' => $data['class_id'],
+                ]);
+            }]);
+        }
+        if ( !empty($data['term_id']) ) {
+            $query->contain(['Fees'=> function ($q) use ($data) {
+                return $q->where([
+                    'Fees.term_id' => $data['term_id'],
+                ]);
+            }]);
+        }
+
+            $data = $query->where(['paid'=>1])
+            ->groupBy('student_id')
+            ->toArray();
+
+        return $data;
+    }
+
+
+    public function getCompulsoryFeesByParameters(Array $data)
+    {
+        $query = $this->find()
+            ->enableHydration(false);
+
+        if ( !empty($data['session_id'])){ // chain this query if session_id is set
+            $query->andWhere(['session_id'=>$data['session_id']]);
+        }
+
+        if ( !empty($data['class_id'])){ // chain this query if class_id is set
+            $query->andWhere(['class_id'=>$data['class_id']]);
+        }
+
+        if ( !empty($data['term_id'])){ // chain this query if session_id is set
+            $query->andWhere(['term_id'=>$data['term_id']]);
+        }
+        $query->andWhere(['compulsory'=>1]);
+        return $query->toArray();
+    }
+
+
+    public function queryFeesTable(Array $data )
+    {
+         $query = $this->find()
+            ->contain([
+                'StudentFees' => function ($q) {
+                    return $q->where(['StudentFees.paid'=>0]);
+                },
+            ])->enableHydration(false);
+
+        if ( !empty($data['session_id'])){ // chain this query if session_id is set
+           $query->andWhere(['Fees.session_id'=>$data['session_id']]);
+        }
+
+        if ( !empty($data['class_id'])){ // chain this query if class_id is set
+            $query->andWhere(['Fees.class_id'=>$data['class_id']]);
+        }
+
+        if ( !empty($data['term_id'])){ // chain this query if session_id is set
+            $query->andWhere(['Fees.term_id'=>$data['term_id']]);
+        }
+
+        return $query->groupBy('fee_category_id')->toArray();
+
+    }
+
+    public function getFeeCategoriesData()
+    {
+        $feeCategories = $this->FeeCategories->find('all')
+            ->combine('id','type')
+            ->toArray();
+        return $feeCategories;
+    }
+
 }

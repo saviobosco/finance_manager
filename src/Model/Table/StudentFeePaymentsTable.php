@@ -6,6 +6,7 @@ use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 
 /**
@@ -106,25 +107,66 @@ class StudentFeePaymentsTable extends Table
         return $rules;
     }
 
-    public function savePayment(Array $payments)
+    /**
+     * @param $paymentInput
+     * @param array $paymentOutput
+     * @return array
+     * This Function filters through each payment Data to remove those with empty amount
+     * This is to prevent data corruption ..
+     */
+    public function processPaymentData($paymentInput,&$paymentOutput = [])
     {
-        // generate the receipt
-
-        $receipt = $this->Receipts->generateReceipt();
-        if ( !$receipt ) { // if receipt generation is false
-            return false; // return false
+        $total = 0;
+        if ( is_array($paymentInput)) {
+            foreach ( $paymentInput as $id => $value ) {
+                if ( !empty(trim($value->amount_paid)) && $value->amount_paid > 0 ) {
+                    $paymentOutput[] = $value;
+                    $total += $value->amount_paid;
+                }
+            }
         }
+        return ['paymentData' => $paymentOutput , 'total' => $total ] ;
+    }
+
+    public function savePayment(Array $payments,EntityInterface $receipt ,$paymentDetail)
+    {
+        if ( empty($payments)) {
+            return false;
+        }
+
+        // Create payment Record
+        $paymentTable = TableRegistry::get('Payments');
+        $paymentDetail['payment_status'] = 0;
+        $newEntity = $paymentTable->newEntity($paymentDetail);
+        $savedPaymentRecord = $paymentTable->save($newEntity);
+        if (!$savedPaymentRecord ) {
+            // delete the receipt
+            $this->Receipts->delete($receipt);
+            return false;
+        }
+
         foreach ( $payments as $payment ) {
 
             if ( $payment->amount_paid < $payment->amount_to_pay ) { // if amount paid is less than the amount to pay
                 $payment->amount_remaining = (float)$payment->amount_to_pay - (float)$payment->amount_paid ;
             }
             $payment->receipt_id = $receipt->id;
-            $this->save($payment);
+            $saved = $this->save($payment);
+
+            $event = new Event('Model.StudentFeePayments.afterEachPaymentSaved',$this,[
+                'paymentDetail' => $saved ]);
+            $this->eventManager()->dispatch($event);
+            // dispatch Income by fees record keeping
         }
+        $event = new Event('Model.StudentFeePayments.afterPayment',$this,[
+            'receipt' => $receipt
+        ]);
+        // dispatch payment event
+        $this->eventManager()->dispatch($event);
         // this returns the receipt id
-        return $receipt->id;
+        return true;
     }
+
 
     public function afterSave(Event $event, EntityInterface $entity )
     {

@@ -52,7 +52,28 @@ class ReceiptsTable extends Table
         ]);
 
         $this->hasMany('StudentFeePayments', [
-            'foreignKey' => 'receipt_id'
+            'foreignKey' => 'receipt_id',
+            'joinType' => 'INNER'
+        ]);
+
+        $this->hasOne('Payments', [
+            'foreignKey' => 'receipt_id',
+            'joinType' => 'INNER'
+        ]);
+
+        $this->belongsTo('Students', [
+            'foreignKey' => 'student_id',
+            'joinType' => 'INNER'
+        ]);
+
+        $this->belongsTo('CreatedByUser',[
+            'className' => 'Accounts',
+            'foreignKey' => 'created_by'
+        ]);
+
+        $this->belongsTo('ModifiedByUser',[
+            'className' => 'Accounts',
+            'foreignKey' => 'modified_by'
         ]);
     }
 
@@ -68,20 +89,15 @@ class ReceiptsTable extends Table
             ->integer('id')
             ->allowEmpty('id', 'create');
 
-        $validator
-            ->integer('ref_number')
-            ->requirePresence('ref_number', 'create')
-            ->notEmpty('ref_number');
 
         return $validator;
     }
 
-    public function generateReceipt()
+    public function generateReceipt($student_id,$total)
     {
-        $factory = new Factory;
-        $generator = $factory->getGenerator(new Strength(Strength::MEDIUM));
         $newData = $this->newEntity([
-            'ref_number' => $generator->generateInt(111111,999999)
+            'student_id' => $student_id,
+            'total_amount_paid' => $total
         ]);
         return $this->save($newData);
     }

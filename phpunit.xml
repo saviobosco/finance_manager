@@ -14,7 +14,8 @@
     <!-- Add any additional test suites you want to run here -->
     <testsuites>
         <testsuite name="App Test Suite">
-            <directory>./tests/TestCase</directory>
+            <!-- <directory>./tests/TestCase</directory> -->
+            <file>./tests/TestCase/Model/Table/FeesTableTest.php</file>
         </testsuite>
         <!-- Add plugin test suites here. -->
     </testsuites>
