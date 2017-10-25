@@ -43,6 +43,35 @@
             <li class="has-sub">
                 <a href="javascript:;">
                     <b class="caret pull-right"></b>
+                    <i class="fa fa-calendar"></i><span> Sessions </span>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <?= $this->Html->link('All',[
+                            'plugin'=>null,
+                            'controller'=>'Sessions',
+                            'action'=>'index'
+                        ],
+                            [
+                                'escape' => false
+                            ])  ?>
+                    </li>
+                    <li>
+                        <?= $this->Html->link('New',[
+                            'plugin'=>null,
+                            'controller'=>'Sessions',
+                            'action'=>'add'
+                        ],
+                            [
+                                'escape' => false
+                            ]
+                        )  ?>
+                    </li>
+                </ul>
+            </li>
+            <li class="has-sub">
+                <a href="javascript:;">
+                    <b class="caret pull-right"></b>
                     <i class="fa fa-bars"></i><span>Fees Categories </span>
                 </a>
                 <ul class="sub-menu">

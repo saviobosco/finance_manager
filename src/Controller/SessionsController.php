@@ -20,6 +20,24 @@ class SessionsController extends AppController
      */
     public function index()
     {
+        $this->paginate = [
+            'contain' => [
+                'CreatedByUser'=>[
+                    'fields'=>[
+                        'id',
+                        'first_name',
+                        'last_name'
+                    ]
+                ],
+                'ModifiedByUser'=>[
+                    'fields'=>[
+                        'id',
+                        'first_name',
+                        'last_name'
+                    ]
+                ]
+            ]
+        ];
         $sessions = $this->paginate($this->Sessions);
 
         $this->set(compact('sessions'));
@@ -36,7 +54,24 @@ class SessionsController extends AppController
     public function view($id = null)
     {
         $session = $this->Sessions->get($id, [
-            'contain' => ['Fees', 'Students']
+            'contain' => [
+                'Fees',
+                'Students',
+                'CreatedByUser'=>[
+                    'fields'=>[
+                        'id',
+                        'first_name',
+                        'last_name'
+                    ]
+                ],
+                'ModifiedByUser'=>[
+                    'fields'=>[
+                        'id',
+                        'first_name',
+                        'last_name'
+                    ]
+                ]
+            ]
         ]);
 
         $this->set('session', $session);

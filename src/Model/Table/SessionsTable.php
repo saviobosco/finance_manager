@@ -56,6 +56,16 @@ class SessionsTable extends Table
         $this->hasMany('Students', [
             'foreignKey' => 'session_id'
         ]);
+
+        $this->belongsTo('CreatedByUser',[
+            'className' => 'Accounts',
+            'foreignKey' => 'created_by'
+        ]);
+
+        $this->belongsTo('ModifiedByUser',[
+            'className' => 'Accounts',
+            'foreignKey' => 'modified_by'
+        ]);
     }
 
     /**
