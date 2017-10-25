@@ -9,6 +9,46 @@
         <h4 class="panel-title"> Search For Student </h4>
     </div>
     <div class="panel-body">
-        <?= $this->Site->displayStudentSearchPanel() ?>
+        <div class='m-t-15'>
+            <form id='getStudent'>
+                <div class='input-group'>
+                    <div class='input-group-btn'>
+                    </div>
+                    <input type='text' class='form-control' id='admissionNumber' placeholder='Student Admission Number' />
+                    <div class='input-group-btn'>
+                        <input type='submit' class='btn btn-success' value='Get Student'>
+                    </div>
+                </div>
+                <div class='text-center'>
+                    <b> Search By : </b>   Admission Number<input type='radio' name='type' checked >  or Full Name <input type='radio' name='type'>
+                </div>
+            </form>
+            <div id='get-student-ajax-return'> </div>
+        </div>
     </div>
 </div>
+
+<script>
+    var handleGetStudent = function () {
+        $('#getStudent').submit(function(event){
+            event.preventDefault();
+            var admissionNumber = $('input[id=\"admissionNumber\"]');
+            console.log(admissionNumber.val());
+            $.ajax({
+                type: "GET",
+            url: '<?= $this->Url->build(['plugin'=>null,'controller'=>'Students','action'=>'get_student_by_ajax'], true) ?>',
+                contentType:false,
+                cache:false,
+                data:{ 'id':admissionNumber.val()},
+            beforeSend:function(){
+                $('#get-student-ajax-return').html('<div class=\"alert alert-info m-t-10\"> <i class=\"fa fa-spinner fa-spin fa-1x fa-fw\"></i> Fetching student Record </div>');
+            },
+            success: function(data,status){
+                $('#get-student-ajax-return').html(data);
+            },
+            dataType: 'text'
+        });
+    });
+    };
+    handleGetStudent();
+</script>

@@ -235,5 +235,3 @@ Configure::write('Users.config', ['users']);
 Plugin::load('CakeDC/Users', ['routes' => true, 'bootstrap' => true]);
 
 Plugin::load('Muffin/Footprint');
-
-Plugin::load('StudentsManager', ['bootstrap' => false, 'routes' => true]);
