@@ -169,7 +169,7 @@ class FeesTable extends Table
         // find all student under that fees class and session
         $students = $studentsTable->find('all')
             ->select(['id','class_id','status'])
-            ->where(['class_id'=>$class_id,'status' => 1])->enableHydration(false);
+            ->where(['class_id'=>$class_id,'status' =>1])->enableHydration(false);
 
         // iterate through the result set and create their respective fees
         if ( $students ) {
@@ -177,7 +177,7 @@ class FeesTable extends Table
             $studentFeesTable = TableRegistry::get('StudentFees');
             foreach ( $students as $student ) {
                 $newStudentFees = $studentFeesTable->newEntity([
-                    'student_id' => $student->id,
+                    'student_id' => $student['id'],
                     'fee_id' => $fee_id,
                     'paid' => 0,
                 ]);

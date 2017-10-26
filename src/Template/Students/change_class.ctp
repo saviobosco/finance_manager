@@ -21,7 +21,7 @@ $this->Form->setTemplates($formTemplates);
                     <div class="col-sm-12">
                         <?= $this->Form->create('',['class'=>'form-inline','type'=>'GET']) ?>
                         <div class="form-group">
-                            <?= $this->Form->control('class_id',['options' => $classes,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Class'],'value'=>@$this->SearchParameter->getDefaultValue($this->request->query['class_id'])]); ?>
+                            <?= $this->Form->control('class_id',['empty'=>true, 'options' => $classes,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Select Students Class'],'value'=>@$this->SearchParameter->getDefaultValue($this->request->query['class_id'])]); ?>
                             <?= $this->Form->submit(__('change'),[
                                 'templates' => [
                                     'submitContainer' => '{{content}}'
@@ -32,17 +32,17 @@ $this->Form->setTemplates($formTemplates);
                     </div>
                 </div>
 
+                <?= $this->Form->create() ?>
 
                 <h3><?= __('Students') ?></h3>
-                <table id="data-table" class="table table-responsive" >
+                <table class="table table-responsive" >
                     <thead>
                     <tr>
                         <th scope="col"><?= h('Admission Number') ?></th>
-                        <th scope="col"><?= $this->Paginator->sort('first_name') ?></th>
-                        <th scope="col"><?= $this->Paginator->sort('last_name') ?></th>
-                        <th scope="col"><?= $this->Paginator->sort('gender') ?></th>
-                        <th scope="col"><?= $this->Paginator->sort('class_id') ?></th>
-                        <th scope="col" class="actions"><?= __('Actions') ?></th>
+                        <th scope="col"><?= __('First Name') ?></th>
+                        <th scope="col"><?= __('Last Name') ?></th>
+                        <th scope="col"><?= __('class') ?></th>
+                        <th scope="col"> <input type="checkbox" id="selectall"> select all</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -51,28 +51,18 @@ $this->Form->setTemplates($formTemplates);
                             <td><?= h($student->id) ?></td>
                             <td><?= h($student->first_name) ?></td>
                             <td><?= h($student->last_name) ?></td>
-                            <td><?= h($student->gender) ?></td>
                             <td><?= h($student->class->class) ?></td>
-                            <td class="actions">
-                                <?= $this->Html->link('Pay Fees <i class="fa fa-money"></i>',[
-                                    'controller'=>'Students',
-                                    'action'=>'getStudentFees',
-                                    '?'=>[
-                                        'student_id'=>$student->id
-                                    ]
-                                ], [
-                                        'escape' => false,
-                                        'class'=>'btn btn-sm btn-primary m-r-5'
-                                    ]
-                                ) ?>
-                                <?= $this->Html->link(__('View'), ['action' => 'view','?'=>['student_id'=>$student->id]],['escape'=>false,'class'=>'btn btn-primary btn-sm']) ?>
-                                <?= $this->Html->link(__('Edit'), ['action' => 'edit', $student->id],['escape'=>false,'class'=>'btn btn-info btn-sm']) ?>
-                                <?= $this->Form->postLink('<i class="fa fa-trash"></i>', ['action' => 'delete', $student->id], ['confirm' => __('Are you sure you want to delete # {0}?', $student->id),'escape'=>false,'class'=>'btn btn-danger btn-sm']) ?>
-                            </td>
+                            <td> <input type="checkbox" class="checkbox1" name="student_ids[]" value="<?= $student->id ?>"> </td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>
                 </table>
+                <?= $this->Form->control('change_class_id',['options' => $classes,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Students Class To'],'required'=>true ]); ?>
+                <?= $this->Form->submit(__('change Class'),[
+                    'class'=>'btn btn-primary'
+                ]) ?>
+
+                <?= $this->Form->end() ?>
                 <div class="paginator">
                     <ul class="pagination">
                         <?= $this->Paginator->first('<< ' . __('first')) ?>

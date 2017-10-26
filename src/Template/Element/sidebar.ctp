@@ -10,9 +10,9 @@
                     </a>
                 </div>
                 <div class="info">
-                    <?= ucfirst($this->request->session()->read('Auth.User.first_name')) ?>
+                    <?= ucfirst($this->request->session()->read('Auth.User.username')) ?>
                     <small>
-                        <?= ucfirst($this->request->session()->read('Auth.User.role')) ?>
+                        <?= ($this->request->session()->read('Auth.User.is_superuser')) ? 'Superuser'  : ucfirst($this->request->session()->read('Auth.User.role')) ?>
                     </small>
                 </div>
             </li>
@@ -279,7 +279,10 @@
                         <?= $this->Html->link('All',[
                             'plugin'=>null,
                             'controller'=>'Students',
-                            'action'=>'index'
+                            'action'=>'index',
+                            '?' => [
+                                'class_id' => 1
+                            ]
                         ],
                             [
                                 'escape' => false
@@ -290,6 +293,17 @@
                             'plugin'=>null,
                             'controller'=>'Students',
                             'action'=>'add'
+                        ],
+                            [
+                                'escape' => false
+                            ]
+                        )  ?>
+                    </li>
+                    <li>
+                        <?= $this->Html->link('Change Students Class',[
+                            'plugin'=>null,
+                            'controller'=>'Students',
+                            'action'=>'changeClass'
                         ],
                             [
                                 'escape' => false

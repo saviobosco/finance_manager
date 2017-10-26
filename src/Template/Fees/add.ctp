@@ -83,7 +83,7 @@
             // make ajax request
         });
 
-        $('#add-new-fee').submit(function(event){
+        /*$('#add-new-fee').submit(function(event){
             event.preventDefault();
             var result ;
             var thisForm = this ;
@@ -121,7 +121,7 @@
                     }
 
                 });
-        })
+        })*/
     };
     handleAddNewFee();
 </script>

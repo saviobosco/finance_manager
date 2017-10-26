@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class='text-center'>
-                    <b> Search By : </b>   Admission Number<input type='radio' name='type' checked >  or Full Name <input type='radio' name='type'>
+                    <b> Search By : </b>   Admission Number<input type='radio' name='search_type' value="admission_number" checked >  or Full Name <input type='radio' name='search_type' value="full_name">
                 </div>
             </form>
             <div id='get-student-ajax-return'> </div>
@@ -32,8 +32,9 @@
     var handleGetStudent = function () {
         $('#getStudent').submit(function(event){
             event.preventDefault();
+            // check for url to use
+            $()
             var admissionNumber = $('input[id=\"admissionNumber\"]');
-            console.log(admissionNumber.val());
             $.ajax({
                 type: "GET",
             url: '<?= $this->Url->build(['plugin'=>null,'controller'=>'Students','action'=>'get_student_by_ajax'], true) ?>',

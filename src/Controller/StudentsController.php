@@ -32,7 +32,7 @@ class StudentsController extends AppController
             $this->paginate = [
                 'limit' => 1000,
                 'maxLimit' => 1000,
-                'contain' => ['Sessions', 'Classes'],
+                'contain' => ['Classes'],
                 'conditions' => [
                     'Students.status'   => 1,
                 ],
@@ -72,10 +72,8 @@ class StudentsController extends AppController
         $getData = $this->request->getQuery();
         try {
             $student = $this->Students->get($getData['student_id'], [
-                'contain' => [ 'Sessions', 'Classes', 'StudentFees.Fees.FeeCategories']
+                'contain' => [ 'Sessions', 'Classes','StudentFees.Fees.FeeCategories']
             ]);
-
-            //$paymentReceipts = $this->Students->getStudentPaymentReceipts($student->id);
 
             $sessions = $this->Students->Sessions->find('list', ['limit' => 200])->toArray();
             $classes = $this->Students->Classes->find('list', ['limit' => 200])->toArray();
@@ -83,8 +81,9 @@ class StudentsController extends AppController
             $terms = $this->Terms->find('list', ['limit' => 200])->toArray();
             $this->set(compact('student','sessions','classes','terms'));
             $this->set('_serialize', ['student']);
+
         } catch ( RecordNotFoundException $e ) {
-            $this->render('/Element/recordNotFound');
+            $this->render('/Element/noRecordFound');
         }
 
     }
@@ -304,9 +303,51 @@ class StudentsController extends AppController
     {
         if ( $this->request->is('ajax') ) {
             $class_id = $this->request->getQuery('class_id');
-            $students = $this->Students->find('all')->where(['class_id'=>$class_id]);
+            $students = $this->Students->find('all')->where(['class_id'=>$class_id,'status'=>1]);
             $this->response->body($students->count());
             return $this->response;
+        }
+    }
+
+    public function changeClass()
+    {
+        $students = null;
+
+        if (!empty($this->request->getQuery('class_id'))) {
+            $this->paginate = [
+                'limit' => 1000,
+                'maxLimit' => 1000,
+                'contain' => ['Sessions', 'Classes'],
+                'conditions' => [
+                    'Students.status'   => 1,
+                    'Students.class_id' => $this->request->getQuery('class_id')
+                ],
+            ];
+            $students = $this->paginate($this->Students);
+        }
+        $sessions = $this->Students->Sessions->find('list',['limit' => 200]);
+        $classes = $this->Students->Classes->find('list',['limit' => 200]);
+        $this->set(compact('students','sessions','classes'));
+        $this->set('_serialize', ['students']);
+
+        if ( $this->request->is(['patch', 'post', 'put']) ) {
+            // get postData
+            $postData = $this->request->getData();
+            if ( empty($postData['change_class_id'])) {
+                $this->Flash->error(__('Please select a class to change students to .... '));
+                return;
+            }
+            if ( empty($postData['student_ids'])) {
+                $this->Flash->error(__('No Student was selected. Please select a student(s)'));
+                return;
+            }
+            $returnData = $this->Students->changeStudentsClass($postData['change_class_id'],$postData['student_ids']);
+            if ($returnData['success'] ) {
+                $this->Flash->success(__('The selected students class was successfully changed'));
+                return $this->redirect($this->request->referer());
+            } else {
+                $this->Flash->error(__('The specified class and current class are the same.'));
+            }
         }
     }
 }

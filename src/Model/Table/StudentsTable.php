@@ -222,4 +222,24 @@ class StudentsTable extends Table
     {
 
     }
+
+    public function changeStudentsClass($class_id,$student_ids)
+    {
+        $returnData['success'] = 1;
+        // get the students one by one
+        foreach ( $student_ids as $student_id) {
+            $student = $this->find()->select(['id','class_id'])->where(['id'=>$student_id])->first();
+            // change the class
+            if ( !$student ) {
+                continue;
+            }
+            if ( $student->class_id == $class_id ) {
+                $returnData['success'] = 0;
+                break;
+            }
+            $student->class_id = $class_id;
+            $this->save($student);
+        }
+        return $returnData;
+    }
 }
