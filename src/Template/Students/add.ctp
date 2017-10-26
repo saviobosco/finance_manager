@@ -25,14 +25,13 @@
                         ['value' => 'female', 'text' => 'Female',]
                     ],['hiddenField'=>false,'label'=>true,'templates'=>['input' => '<input type="{{type}}" name="{{name}}"{{attrs}}/>',]]);
                     //echo $this->Form->control('state_id');
+                    echo $this->Form->control('class_id');
                     echo $this->Form->control('religion');
                     echo $this->Form->control('home_residence');
                     echo $this->Form->control('guardian');
                     echo $this->Form->control('relationship_to_guardian');
                     echo $this->Form->control('occupation_of_guardian');
                     echo $this->Form->control('guardian_phone_number');
-                    echo $this->Form->control('session_id');
-                    echo $this->Form->control('class_id');
                     ?>
                 </fieldset>
                 <?= $this->Form->button(__('Submit')) ?>

@@ -83,10 +83,6 @@ $this->Form->templates($formTemplates);
                                             <th><?= __('Class') ?></th>
                                             <td><?= $student->class->class ?></td>
                                         </tr>
-                                        <tr>
-                                            <th><?= __('Session') ?></th>
-                                            <td><?= $student->session->session ?></td>
-                                        </tr>
                                     </table>
 
                                 </div>

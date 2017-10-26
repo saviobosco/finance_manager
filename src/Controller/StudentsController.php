@@ -46,7 +46,7 @@ class StudentsController extends AppController
             $this->paginate = [
                 'limit' => 1000,
                 'maxLimit' => 1000,
-                'contain' => ['Sessions', 'Classes'],
+                'contain' => ['Classes'],
                 'conditions' => [
                     'Students.status'   => 1,
                     'Students.class_id' => $this->request->getQuery('class_id')
@@ -54,7 +54,6 @@ class StudentsController extends AppController
             ];
         }
         $students = $this->paginate($this->Students);
-        $sessions = $this->Students->Sessions->find('list',['limit' => 200]);
         $classes = $this->Students->Classes->find('list',['limit' => 200]);
         $this->set(compact('students','sessions','classes'));
         $this->set('_serialize', ['students']);
@@ -72,7 +71,7 @@ class StudentsController extends AppController
         $getData = $this->request->getQuery();
         try {
             $student = $this->Students->get($getData['student_id'], [
-                'contain' => [ 'Sessions', 'Classes','StudentFees.Fees.FeeCategories']
+                'contain' => ['Classes','StudentFees.Fees.FeeCategories']
             ]);
 
             $sessions = $this->Students->Sessions->find('list', ['limit' => 200])->toArray();
@@ -106,7 +105,6 @@ class StudentsController extends AppController
             $this->Flash->error(__('The student could not be saved. Please, try again.'));
         }
         //$states = $this->Students->States->find('list', ['limit' => 200]);
-        $sessions = $this->Students->Sessions->find('list', ['limit' => 200]);
         $classes = $this->Students->Classes->find('list', ['limit' => 200]);
         $this->set(compact('student', 'states', 'sessions', 'classes'));
         $this->set('_serialize', ['student']);
@@ -180,7 +178,7 @@ class StudentsController extends AppController
         }
 
         $student = $this->Students->get($getQuery['student_id'],[
-            'contain' => ['Classes','Sessions']
+            'contain' => ['Classes']
         ]);
 
         if ( isset($getQuery['term_id']) OR isset($getQuery['class_id']) OR isset($getQuery['session_id'])) {
@@ -248,13 +246,13 @@ class StudentsController extends AppController
         $receiptDetails = $this->Students->getReceiptDetails($passedData['receipt_id']);
 
         $student = $this->Students->get($receiptDetails->student_id,[
-            'contain' => ['Classes','Sessions']
+            'contain' => ['Classes']
         ]);
         //get Student Arrears
         $arrears = $this->Students->getStudentArrears($receiptDetails->student_id);
 
-        $sessions = $this->Students->Sessions->find('list', ['limit' => 200])->toArray();
-        $classes = $this->Students->Classes->find('list', ['limit' => 200])->toArray();
+        $sessions = $this->Students->Sessions->find('list')->toArray();
+        $classes = $this->Students->Classes->find('list')->toArray();
         $this->loadModel('Terms');
         $terms = $this->Terms->find('list', ['limit' => 200])->toArray();
         $this->set(compact('student','receiptDetails','sessions','classes','terms','arrears'));
@@ -279,7 +277,7 @@ class StudentsController extends AppController
         }
 
         $student = $this->Students->get($getQuery['student_id'],[
-            'contain' => ['Classes','Sessions']
+            'contain' => ['Classes']
         ]);
 
         if ( isset($getQuery['term_id']) OR isset($getQuery['class_id']) OR isset($getQuery['session_id'])) {
@@ -288,8 +286,8 @@ class StudentsController extends AppController
             $studentFees = $this->Students->getStudentFees($getQuery['student_id']);
         }
 
-        $sessions = $this->Students->Sessions->find('list', ['limit' => 200])->toArray();
-        $classes = $this->Students->Classes->find('list', ['limit' => 200])->toArray();
+        $sessions = $this->Students->Sessions->find('list')->toArray();
+        $classes = $this->Students->Classes->find('list')->toArray();
         $this->loadModel('Terms');
         $this->loadModel('PaymentTypes');
         $this->loadModel('Banks');
@@ -317,7 +315,7 @@ class StudentsController extends AppController
             $this->paginate = [
                 'limit' => 1000,
                 'maxLimit' => 1000,
-                'contain' => ['Sessions', 'Classes'],
+                'contain' => ['Classes'],
                 'conditions' => [
                     'Students.status'   => 1,
                     'Students.class_id' => $this->request->getQuery('class_id')
@@ -349,5 +347,10 @@ class StudentsController extends AppController
                 $this->Flash->error(__('The specified class and current class are the same.'));
             }
         }
+    }
+
+    public function studentPaymentRecord()
+    {
+
     }
 }

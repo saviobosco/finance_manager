@@ -21,8 +21,8 @@ class SiteHelper extends Helper
     protected $_defaultConfig = [];
 
     public $path = [
-        'plugin' => 'assets/plugins/',
-        'assets' => 'assets/'
+        'plugin' => '/assets/plugins/',
+        'assets' => '/assets/'
     ];
 
     /**

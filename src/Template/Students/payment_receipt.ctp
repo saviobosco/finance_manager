@@ -32,11 +32,9 @@ $this->layout = 'receipt';
                                 </tr>
                                 <tr>
                                     <th><?= __('Admission No.') ?></th>
-                                    <td><?= h($student->id) ?></td>
+                                    <td colspan="2"><?= h($student->id) ?></td>
                                     <th><?= __('Class') ?></th>
-                                    <td><?= h($student->class->class) ?></td>
-                                    <th><?= __('Session') ?></th>
-                                    <td><?= h($student->session->session) ?></td>
+                                    <td colspan="2"><?= h($student->class->class) ?></td>
                                 </tr>
                                 <tr>
 
@@ -91,11 +89,9 @@ $this->layout = 'receipt';
                                 </tr>
                                 <tr>
                                     <th><?= __('Admission No.') ?></th>
-                                    <td><?= h($student->id) ?></td>
+                                    <td colspan="2"><?= h($student->id) ?></td>
                                     <th><?= __('Class') ?></th>
-                                    <td><?= h($student->class->class) ?></td>
-                                    <th><?= __('Session') ?></th>
-                                    <td><?= h($student->session->session) ?></td>
+                                    <td colspan="2"><?= h($student->class->class) ?></td>
                                 </tr>
                                 <tr>
 
