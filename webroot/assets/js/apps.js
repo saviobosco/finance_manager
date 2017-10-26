@@ -999,6 +999,12 @@ var handleDatepicker = function() {
     });
 };
 
+var handleSelectall = function() {
+    $("#selectall").change(function () {
+        $(".checkbox1").prop('checked', $(this).prop("checked"));
+    });
+};
+
 
 
 /* Application Controller
@@ -1018,6 +1024,7 @@ var App = function () {
             renderSwitcher();
             handleDashboardDatepicker();
             handleDatepicker();
+            handleSelectall();
 		    //this.initThemePanel();
 		},
 		initSidebar: function() {
