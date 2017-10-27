@@ -64,6 +64,7 @@
                             <thead>
                             <tr>
                                 <th scope="col"><?= __('Admission Number') ?></th>
+                                <th scope="col"><?= __('Full Name') ?></th>
                                 <th scope="col"><?= __('Paid') ?></th>
                             </tr>
                             </thead>
@@ -71,6 +72,7 @@
                             <?php foreach ($fee->student_fees as $studentFees): ?>
                                 <tr>
                                     <td><?= h($studentFees->student_id) ?></td>
+                                    <td><?= h($studentFees->student->first_name.' '.$studentFees->student->last_name) ?></td>
                                     <td><?= ($studentFees->paid) ? '<span class="label label-success">Yes  </span>' : '<span class="label label-danger"> No </span>' ?></td>
                                 </tr>
                             <?php endforeach; ?>

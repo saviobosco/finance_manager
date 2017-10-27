@@ -40,6 +40,7 @@
                             <thead>
                             <tr>
                                 <th scope="col"><?= __('Admission Number') ?></th>
+                                <th scope="col"><?= __('Full Name') ?></th>
                                 <th scope="col"><?= __('Amount') ?></th>
                             </tr>
                             </thead>
@@ -47,6 +48,7 @@
                             <?php foreach ($fee->student_fees as $studentFees): ?>
                                 <tr>
                                     <td><?= h($studentFees->student_id) ?></td>
+                                    <td><?= h($studentFees->student->first_name.' '.$studentFees->student->last_name) ?></td>
                                     <td><?= ($studentFees->amount_remaining) ? $this->Currency->displayCurrency($studentFees->amount_remaining) : $this->Currency->displayCurrency($fee->amount) ?></td>
                                 </tr>
                             <?php endforeach; ?>

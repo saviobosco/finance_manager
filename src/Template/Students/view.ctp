@@ -99,10 +99,6 @@ use Cake\I18n\Time;
                                             <td><?= h($student->state_of_origin) ?></td>
                                         </tr>
                                         <tr>
-                                            <th><?= __('Religion') ?></th>
-                                            <td><?= h($student->religion) ?></td>
-                                        </tr>
-                                        <tr>
                                             <th><?= __('Home Residence') ?></th>
                                             <td><?= h($student->home_residence) ?></td>
                                         </tr>

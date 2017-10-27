@@ -24,7 +24,13 @@ class ReceiptsController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Students']
+            'contain' => [
+                'Students',
+                'Payments',
+            ],
+            'order' => [
+                'created' => 'desc'
+            ]
         ];
         $receipts = $this->paginate($this->Receipts);
 
@@ -72,7 +78,6 @@ class ReceiptsController extends AppController
         $receipt = $this->Receipts->get($id, [
             'contain' => [
                 'Students.Classes',
-                'Students.Sessions',
                 'StudentFeePayments.StudentFees.Fees.FeeCategories',
                 'Payments.PaymentTypes',
                 'CreatedByUser'=>[
@@ -134,8 +139,9 @@ class ReceiptsController extends AppController
     public function edit($id = null)
     {
         $receipt = $this->Receipts->get($id, [
-            'contain' => []
+            'contain' => ['StudentFeePayments','Payments']
         ]);
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $receipt = $this->Receipts->patchEntity($receipt, $this->request->getData());
             if ($this->Receipts->save($receipt)) {
@@ -145,8 +151,9 @@ class ReceiptsController extends AppController
             }
             $this->Flash->error(__('The receipt could not be saved. Please, try again.'));
         }
-        $students = $this->Receipts->Students->find('list', ['limit' => 200]);
-        $this->set(compact('receipt', 'students'));
+        $students = $this->Receipts->Students->getStudentsDataList();
+        $paymentTypes = $this->Receipts->Payments->PaymentTypes->find('list', ['limit' => 200]);
+        $this->set(compact('receipt', 'students','paymentTypes'));
         $this->set('_serialize', ['receipt']);
     }
 
@@ -160,13 +167,20 @@ class ReceiptsController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $receipt = $this->Receipts->get($id);
-        if ($this->Receipts->delete($receipt)) {
-            $this->Flash->success(__('The receipt has been deleted.'));
-        } else {
-            $this->Flash->error(__('The receipt could not be deleted. Please, try again.'));
+        try {
+            $receipt = $this->Receipts->get($id);
+            if ($this->Receipts->delete($receipt)) {
+                $this->Flash->success(__('The receipt has been deleted.'));
+            } else {
+                $this->Flash->error(__('The receipt could not be deleted. Please, try again.'));
+            }
+            return $this->redirect(['action' => 'index']);
+
+        } catch ( \PDOException $e ) {
+            $this->Flash->error(__('This receipt cannot be deleted!!!'));
+            return $this->redirect(['action' => 'index']);
         }
 
-        return $this->redirect(['action' => 'index']);
+
     }
 }

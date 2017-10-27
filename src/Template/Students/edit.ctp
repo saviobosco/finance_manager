@@ -25,7 +25,7 @@
                         ['value' => 'female', 'text' => 'Female',]
                     ],['hiddenField'=>false,'label'=>true,'templates'=>['input' => '<input type="{{type}}" name="{{name}}"{{attrs}}/>',]]);
                     //echo $this->Form->control('state_id');
-                    echo $this->Form->control('religion');
+                    echo $this->Form->control('religion_id',['empty'=>'Empty','options'=>$religions]);
                     echo $this->Form->control('home_residence');
                     echo $this->Form->control('guardian');
                     echo $this->Form->control('relationship_to_guardian');

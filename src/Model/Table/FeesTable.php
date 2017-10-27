@@ -279,19 +279,32 @@ class FeesTable extends Table
             ->toArray();
     }
 
+    // Todo : Review this code algorithm
     public function createStudentsFeeRecord(Array $data )
     {
         $fee_id = $data['fee_id'];
         $students = $data['student_ids'];
         // create new student_fee entity
-        $student_fee = $this->StudentFees->newEntity(['fee_id'=>$fee_id,'paid'=>0]);
-        foreach ( $students as $student ) {
+        $number_of_students_add = 0;
+        foreach ( $students as $student_id ) {
             // check if student has the record
-            if ( (bool)$this->StudentFees->find()->where(['fee_id'=>$fee_id,'student_id'=>$student])->first()) {
+            $recordExists = (bool)$this->StudentFees->find()->where(['fee_id'=>$fee_id,'student_id'=>$student_id])->first();
+            if ( $recordExists ) {
                 continue;
             }
-            $student_fee->student_id = $student;
-            $this->StudentFees->save($student_fee);
+            $student_fee = $this->StudentFees->newEntity(['fee_id'=>$fee_id,'paid'=>0]);
+            $student_fee->student_id = $student_id;
+            if ($this->StudentFees->save($student_fee)) {
+                $number_of_students_add++;
+            }
+        }
+        // if the number is greater than 0
+        if ( $number_of_students_add > 0 ){
+            // update the fees details
+            $fee = $this->get($data['fee_id']);
+            $fee->number_of_students = $fee->number_of_students + $number_of_students_add ;
+            $fee->income_amount_expected = (float)$fee->income_amount_expected + $fee->amount * $number_of_students_add;
+            $this->save($fee);
         }
         return true;
     }
@@ -305,8 +318,8 @@ class FeesTable extends Table
                 'Classes',
                 'Sessions',
                 'FeeCategories',
-                'StudentFees' => function($q) {
-                return $q->where(['paid'=>0]);
+                'StudentFees.Students' => function($q) {
+                return $q->where(['StudentFees.paid'=>0]);
             }])
             ->where(['Fees.id'=>$fee_id])->first();
     }

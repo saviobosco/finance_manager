@@ -256,17 +256,6 @@
                                 'escape' => false
                             ])  ?>
                     </li>
-                    <li>
-                        <?= $this->Html->link('New',[
-                            'plugin'=>null,
-                            'controller'=>'Receipts',
-                            'action'=>'add'
-                        ],
-                            [
-                                'escape' => false
-                            ]
-                        )  ?>
-                    </li>
                 </ul>
             </li>
             <li class="has-sub">
@@ -341,20 +330,64 @@
                     </li>
                 </ul>
             </li>
-            <li>
-                <?= $this->html->link('<i class="fa fa-gears"></i>Settings',[
-                    'plugin'=>null,
-                    'controller'=>'Dashboard',
-                    'action' => 'settings'
-                ],[
-                    'escape' => false
-                ]) ?>
+            <li class="has-sub">
+                <a href="javascript:;">
+                    <b class="caret pull-right"></b>
+                    <i class="fa fa-gears"></i><span> Configuration </span>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <?= $this->html->link('Settings',[
+                            'plugin'=>null,
+                            'controller'=>'Dashboard',
+                            'action' => 'settings'
+                        ],[
+                            'escape' => false
+                        ]) ?>
+                    </li>
+                    <li>
+                        <?= $this->html->link('Update',[
+                            'plugin'=>null,
+                            'controller'=>'Dashboard',
+                            'action' => 'update'
+                        ],[
+                            'escape' => false
+                        ]) ?>
+                    </li>
+                    <li>
+                        <?= $this->html->link('About',[
+                            'plugin'=>null,
+                            'controller'=>'Dashboard',
+                            'action' => 'about'
+                        ],[
+                            'escape' => false
+                        ]) ?>
+                    </li>
+                    <li>
+                        <?= $this->html->link('Help',[
+                            'plugin'=>null,
+                            'controller'=>'Dashboard',
+                            'action' => 'help'
+                        ],[
+                            'escape' => false
+                        ]) ?>
+                    </li>
+                </ul>
             </li>
             <li>
                 <?= $this->html->link('<i class="fa fa-key"></i> Change Password',[
                     'plugin'=>null,
                     'controller'=>'Accounts',
                     'action' => 'changePassword'
+                ],[
+                    'escape' => false
+                ]) ?>
+            </li>
+            <li>
+                <?= $this->html->link('<i class="fa fa-power-off"></i>Log Out',[
+                    'plugin'=>null,
+                    'controller'=>'Accounts',
+                    'action' => 'logout'
                 ],[
                     'escape' => false
                 ]) ?>

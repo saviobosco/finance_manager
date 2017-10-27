@@ -8,7 +8,11 @@ use Cake\ORM\Entity;
  *
  * @property int $id
  * @property int $fee_category_id
+ * @property int $compulsory
  * @property float $amount
+ * @property float $income_amount_expected
+ * @property float $amount_earned
+ * @property int $number_of_students
  * @property int $term_id
  * @property int $class_id
  * @property int $session_id
@@ -19,7 +23,7 @@ use Cake\ORM\Entity;
  *
  * @property \App\Model\Entity\FeeCategory $fee_category
  * @property \App\Model\Entity\Term $term
- * @property \App\Model\Entity\Class $class
+ * @property \App\Model\Entity\Classe $class
  * @property \App\Model\Entity\Session $session
  * @property \App\Model\Entity\StudentFee[] $student_fees
  */

@@ -11,7 +11,7 @@ use Cake\Validation\Validator;
  * Students Model
  *
  * @property \App\Model\Table\StatesTable|\Cake\ORM\Association\BelongsTo $States
- * @property \App\Model\Table\SessionsTable|\Cake\ORM\Association\BelongsTo $Sessions
+ * @property \App\Model\Table\ReligionsTable|\Cake\ORM\Association\BelongsTo $Religions
  * @property \App\Model\Table\ClassesTable|\Cake\ORM\Association\BelongsTo $Classes
  * @property \App\Model\Table\StudentFeesTable|\Cake\ORM\Association\HasMany $StudentFees
  *
@@ -56,10 +56,7 @@ class StudentsTable extends Table
         /*$this->belongsTo('States', [
             'foreignKey' => 'state_id'
         ]);*/
-        $this->belongsTo('Sessions', [
-            'foreignKey' => 'session_id',
-            'joinType' => 'INNER'
-        ]);
+
         $this->belongsTo('Classes', [
             'foreignKey' => 'class_id',
             'joinType' => 'INNER'
@@ -70,6 +67,11 @@ class StudentsTable extends Table
 
         $this->hasMany('Receipts', [
             'foreignKey' => 'student_id'
+        ]);
+
+        $this->belongsTo('Religions', [
+            'foreignKey' => 'religion_id',
+            'joinType' => 'INNER'
         ]);
     }
 
@@ -82,6 +84,11 @@ class StudentsTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
+            ->add('id', 'unique', [
+                'rule' => 'validateUnique',
+                'last'=>true,
+                'message' => __( 'Admission Number already exists'),
+                'provider' => 'table'])
             ->requirePresence('id', 'create')
             ->notEmpty('id', 'create');
 
@@ -138,8 +145,6 @@ class StudentsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        //$rules->add($rules->existsIn(['state_id'], 'States'));
-        $rules->add($rules->existsIn(['session_id'], 'Sessions'));
         $rules->add($rules->existsIn(['class_id'], 'Classes'));
 
         return $rules;
@@ -241,5 +246,17 @@ class StudentsTable extends Table
             $this->save($student);
         }
         return $returnData;
+    }
+
+    public function getStudentsDataList()
+    {
+        $students = $this->StudentFees->Students->find('all')
+            ->map(function($row ) {
+                $row->full_name = $row->first_name.' '.$row->last_name;
+                return $row;
+            })
+            ->combine('id','full_name')
+            ->toArray();
+        return $students;
     }
 }

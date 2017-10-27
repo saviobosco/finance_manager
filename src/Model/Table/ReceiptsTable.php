@@ -12,6 +12,8 @@ use SecurityLib\Strength;
  * Receipts Model
  *
  * @property \App\Model\Table\StudentFeePaymentsTable|\Cake\ORM\Association\HasMany $StudentFeePayments
+ * @property \App\Model\Table\PaymentsTable|\Cake\ORM\Association\HasOne $Payments
+ * @property \App\Model\Table\StudentsTable|\Cake\ORM\Association\BelongsTo $Students
  *
  * @method \App\Model\Entity\Receipt get($primaryKey, $options = [])
  * @method \App\Model\Entity\Receipt newEntity($data = null, array $options = [])

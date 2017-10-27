@@ -14,6 +14,7 @@ use Cake\Datasource\Exception\RecordNotFoundException;
  * @property \App\Model\Table\ReceiptsTable $Receipts
  * @property \App\Model\Table\PaymentsTable $Payments
  * @property \App\Model\Table\TermsTable $Terms
+ * @property \App\Model\Table\SessionsTable $Sessions
  * @property \App\Model\Table\BanksTable $Banks
  *
  * @method \App\Model\Entity\Student[] paginate($object = null, array $settings = [])
@@ -21,6 +22,11 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 class StudentsController extends AppController
 {
 
+    public function initialize()
+    {
+        parent::initialize();
+        $this->loadModel('Sessions');
+    }
     /**
      * Index method
      *
@@ -70,11 +76,13 @@ class StudentsController extends AppController
     {
         $getData = $this->request->getQuery();
         try {
-            $student = $this->Students->get($getData['student_id'], [
-                'contain' => ['Classes','StudentFees.Fees.FeeCategories']
-            ]);
+            $student = $this->Students->find()
+                ->contain(['Classes','StudentFees.Fees.FeeCategories'])
+                ->where(['Students.id'=>$getData['student_id']])
+                ->first();
 
-            $sessions = $this->Students->Sessions->find('list', ['limit' => 200])->toArray();
+
+            $sessions = $this->Sessions->find('list', ['limit' => 200])->toArray();
             $classes = $this->Students->Classes->find('list', ['limit' => 200])->toArray();
             $this->loadModel('Terms');
             $terms = $this->Terms->find('list', ['limit' => 200])->toArray();
@@ -104,9 +112,9 @@ class StudentsController extends AppController
             }
             $this->Flash->error(__('The student could not be saved. Please, try again.'));
         }
-        //$states = $this->Students->States->find('list', ['limit' => 200]);
+        $religions = $this->Students->Religions->find('list');
         $classes = $this->Students->Classes->find('list', ['limit' => 200]);
-        $this->set(compact('student', 'states', 'sessions', 'classes'));
+        $this->set(compact('student', 'states', 'sessions', 'classes','religions'));
         $this->set('_serialize', ['student']);
     }
 
@@ -140,9 +148,9 @@ class StudentsController extends AppController
                     $this->Flash->error(__('The student could not be saved. Please, try again.'));
                 }
             }
-            $sessions = $this->Students->Sessions->find('list', ['limit' => 200]);
+            $religions = $this->Students->Religions->find('list');
             $classes = $this->Students->Classes->find('list', ['limit' => 200]);
-            $this->set(compact('student', 'sessions', 'classes', 'classDemarcations','states'));
+            $this->set(compact('student', 'religions', 'classes', 'classDemarcations','states'));
             $this->set('_serialize', ['student']);
 
         } catch ( RecordNotFoundException $e ) {
@@ -187,7 +195,7 @@ class StudentsController extends AppController
             $studentFees = $this->Students->getStudentFees($getQuery['student_id']);
         }
 
-        $sessions = $this->Students->Sessions->find('list', ['limit' => 200])->toArray();
+        $sessions = $this->Sessions->find('list', ['limit' => 200])->toArray();
         $classes = $this->Students->Classes->find('list', ['limit' => 200])->toArray();
         $this->loadModel('Terms');
         $this->loadModel('PaymentTypes');
@@ -251,7 +259,7 @@ class StudentsController extends AppController
         //get Student Arrears
         $arrears = $this->Students->getStudentArrears($receiptDetails->student_id);
 
-        $sessions = $this->Students->Sessions->find('list')->toArray();
+        $sessions = $this->Sessions->find('list')->toArray();
         $classes = $this->Students->Classes->find('list')->toArray();
         $this->loadModel('Terms');
         $terms = $this->Terms->find('list', ['limit' => 200])->toArray();
@@ -286,7 +294,7 @@ class StudentsController extends AppController
             $studentFees = $this->Students->getStudentFees($getQuery['student_id']);
         }
 
-        $sessions = $this->Students->Sessions->find('list')->toArray();
+        $sessions = $this->Sessions->find('list')->toArray();
         $classes = $this->Students->Classes->find('list')->toArray();
         $this->loadModel('Terms');
         $this->loadModel('PaymentTypes');
@@ -323,7 +331,7 @@ class StudentsController extends AppController
             ];
             $students = $this->paginate($this->Students);
         }
-        $sessions = $this->Students->Sessions->find('list',['limit' => 200]);
+        $sessions = $this->Sessions->find('list',['limit' => 200]);
         $classes = $this->Students->Classes->find('list',['limit' => 200]);
         $this->set(compact('students','sessions','classes'));
         $this->set('_serialize', ['students']);

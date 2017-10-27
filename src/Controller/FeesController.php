@@ -49,7 +49,7 @@ class FeesController extends AppController
                 'Terms',
                 'Classes',
                 'Sessions',
-                'StudentFees',
+                'StudentFees.Students',
                 'CreatedByUser'=>[
                     'fields'=>[
                         'id',
@@ -167,14 +167,21 @@ class FeesController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $fee = $this->Fees->get($id);
-        if ($this->Fees->delete($fee)) {
-            $this->Flash->success(__('The fee has been deleted.'));
-        } else {
-            $this->Flash->error(__('The fee could not be deleted. Please, try again.'));
+        try {
+            $fee = $this->Fees->get($id);
+            if ($this->Fees->delete($fee)) {
+                $this->Flash->success(__('The fee has been deleted.'));
+            } else {
+                $this->Flash->error(__('The fee could not be deleted. Please, try again.'));
+            }
+
+            return $this->redirect(['action' => 'index']);
+
+        } catch ( \PDOException $e ) {
+            $this->Flash->error(__('This fee cannot be deleted because a payment has been made for it.'));
+            return $this->redirect(['action' => 'index']);
         }
 
-        return $this->redirect(['action' => 'index']);
     }
 
     public function feeDefaulters()

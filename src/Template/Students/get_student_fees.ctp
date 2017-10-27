@@ -122,7 +122,7 @@ $this->Form->templates($formTemplates);
                                         'data-amount-to-pay' =>($studentFees[$num]->amount_remaining)? $studentFees[$num]->amount_remaining : $studentFees[$num]->fee->amount,
                                         'templates' => [
                                             'label' => '',
-                                            'inputContainer' => '<div class=" col-12-6 m-b-15 input-group {{type}}{{required}}"> <span class="input-group-addon"> &#8358;  </span>  {{content}} <span class="input-group-addon">.00</span></div>',
+                                            'inputContainer' => '<div class=" col-12-6 m-b-15 input-group {{type}}{{required}}"> <span class="input-group-addon"> &#8358;  </span>  {{content}} <span class="input-group-addon">.00</span>  </div>',
                                         ]
                                     ]) ?></td>
                                 <td style="display: none"><?= $this->Form->hidden('student_fees.'.$num.'.student_fee_id',['value'=>$studentFees[$num]->id]) ?></td>

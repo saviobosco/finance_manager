@@ -80,4 +80,19 @@ class DashboardController extends AppController
 
     }
 
+    public function about()
+    {
+
+    }
+
+    public function help()
+    {
+
+    }
+
+    public function update()
+    {
+
+    }
+
 }
