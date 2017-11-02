@@ -53,6 +53,13 @@ class AppInstaller {
         //}
 
         $this->installDir = $this->currentDir;
+        //$pre = getenv('PATH');
+        //$pre .=';';
+        //$pre .=$this->phpPath;
+        //echo php_sapi_name();
+        //echo getenv('PATH');
+        //echo $this->phpPath;
+        //exit;
 
     }
 
