@@ -77,7 +77,7 @@ class StudentsController extends AppController
         $getData = $this->request->getQuery();
         try {
             $student = $this->Students->find()
-                ->contain(['Classes','StudentFees.Fees.FeeCategories'])
+                ->contain(['Classes','StudentFees.Fees.FeeCategories','StudentFees.StudentFeePayments'])
                 ->where(['Students.id'=>$getData['student_id']])
                 ->first();
 
@@ -359,6 +359,23 @@ class StudentsController extends AppController
 
     public function studentPaymentRecord()
     {
+        $getData = $this->request->getQuery();
+        try {
+            $student = $this->Students->find()
+                ->contain(['Classes','StudentFees.Fees.FeeCategories','StudentFees.StudentFeePayments'])
+                ->where(['Students.id'=>$getData['student_id']])
+                ->first();
 
+
+            $sessions = $this->Sessions->find('list', ['limit' => 200])->toArray();
+            $classes = $this->Students->Classes->find('list', ['limit' => 200])->toArray();
+            $this->loadModel('Terms');
+            $terms = $this->Terms->find('list', ['limit' => 200])->toArray();
+            $this->set(compact('student','sessions','classes','terms'));
+            $this->set('_serialize', ['student']);
+
+        } catch ( RecordNotFoundException $e ) {
+            $this->render('/Element/noRecordFound');
+        }
     }
 }

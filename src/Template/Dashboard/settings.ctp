@@ -54,16 +54,11 @@ $this->Form->templates($edittemplates);
 
                     </div>
                     <div class="tab-pane fade" id="default-tab-2">
-                        <blockquote>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                            <small>Someone famous in <cite title="Source Title">Source Title</cite></small>
-                        </blockquote>
-                        <h4>Lorem ipsum dolor sit amet</h4>
-                        <p>
-                            Nullam ac sapien justo. Nam augue mauris, malesuada non magna sed, feugiat blandit ligula.
-                            In tristique tincidunt purus id iaculis. Pellentesque volutpat tortor a mauris convallis,
-                            sit amet scelerisque lectus adipiscing.
-                        </p>
+                        <p> Upload the school Image Banner</p>
+                        <?= $this->Form->create(null, ['enctype' => 'multipart/form-data']); ?>
+                        <?= $this->form->input('banner',['type'=>'file']) ?>
+                        <?= $this->Form->submit(__('Upload'),['class'=>'btn btn-primary btn-sm m-b-10']) ?>
+
                     </div>
                 </div>
 

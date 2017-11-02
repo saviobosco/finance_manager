@@ -159,6 +159,12 @@ use Cake\I18n\Time;
                                     <td><?= h($sessions[$studentFees->fee->session_id] ).'--'.h('('.($studentFees->fee->term_id)? $terms[$studentFees->fee->term_id] : '' .')' ) ?></td>
                                     <td class="actions">
                                         <?= $this->Form->postLink('<i class="fa fa-trash"></i>', ['controller' => 'StudentFees', 'action' => 'delete', $studentFees->id], ['confirm' => __('Are you sure you want to delete # {0}?', $studentFees->id),'escape'=>false,'class'=>'btn btn-danger btn-sm']) ?>
+
+                                        <?php if ( $studentFees->student_fee_payments ) : ?>
+                                        <!--<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#paymentDetailModal" data-payment-id="<?= $studentFees->id ?>">
+                                            see payment details
+                                        </button> -->
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -207,3 +213,33 @@ use Cake\I18n\Time;
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="paymentDetailModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // using the modal to load the payment details
+    $("#paymentDetailModal").on('shown.bs.modal', function () { // before the modal is fully loaded
+        // get the payment id
+        console.log(event);
+    });
+
+</script>

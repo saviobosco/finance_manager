@@ -1,1 +1,1 @@
-<?= $this->Currency->displayCurrency($totalExpenses) ?>
+<?= ( $totalExpenses) ? $this->Currency->displayCurrency($totalExpenses) : $this->Currency->displayCurrency(0) ?>

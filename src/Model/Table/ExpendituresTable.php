@@ -110,7 +110,7 @@ class ExpendituresTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['expenditure_categories_id'], 'ExpenditureCategories'));
+        $rules->add($rules->existsIn(['expenditure_category_id'], 'ExpenditureCategories'));
 
         return $rules;
     }
