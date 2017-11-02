@@ -18,7 +18,7 @@
                     <thead>
                     <tr>
                         <th scope="col"><?= $this->Paginator->sort('id') ?></th>
-                        <th scope="col"><?= $this->Paginator->sort('expenditure_categories_id') ?></th>
+                        <th scope="col"><?= $this->Paginator->sort('expenditure_category_id') ?></th>
                         <th scope="col"><?= $this->Paginator->sort('purpose') ?></th>
                         <th scope="col"><?= $this->Paginator->sort('date') ?></th>
                         <th scope="col"><?= $this->Paginator->sort('created') ?></th>

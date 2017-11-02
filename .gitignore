@@ -4,4 +4,3 @@
 /logs/*
 .idea
 finance_database-2.sqlite
-/config/Migrations/schema-dump-default.lock

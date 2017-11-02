@@ -53,7 +53,7 @@ class ExpendituresTable extends Table
         ]);
 
         $this->belongsTo('ExpenditureCategories', [
-            'foreignKey' => 'expenditure_categories_id',
+            'foreignKey' => 'expenditure_category_id',
             'joinType' => 'INNER'
         ]);
 
