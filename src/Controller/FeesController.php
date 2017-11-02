@@ -79,10 +79,10 @@ class FeesController extends AppController
     public function add()
     {
         $fee = $this->Fees->newEntity();
-        $feeCategories = $this->Fees->FeeCategories->find('list', ['limit' => 200]);
-        $terms = $this->Fees->Terms->find('list', ['limit' => 200]);
-        $classes = $this->Fees->Classes->find('list', ['limit' => 200]);
-        $sessions = $this->Fees->Sessions->find('list', ['limit' => 200]);
+        $feeCategories = $this->Fees->FeeCategories->find('list')->toArray();
+        $terms = $this->Fees->Terms->find('list')->toArray();
+        $classes = $this->Fees->Classes->find('list')->toArray();
+        $sessions = $this->Fees->Sessions->find('list')->toArray();
         $this->set(compact('fee', 'feeCategories', 'terms', 'classes', 'sessions'));
         $this->set('_serialize', ['fee']);
 
@@ -116,16 +116,23 @@ class FeesController extends AppController
 
     protected function createNewFee($fee)
     {
-        //$fee = $this->Fees->newEntity();
+        $postData = $this->request->getData();
+
         $fee = $this->Fees->patchEntity($fee, $this->request->getData());
-        $response = $this->Fees->createNewFee($fee);
-        if ( $response === true ) {
-            return __('The fee was successfully created.');
-        }elseif ( $response === false ) {
-            return __('The fee could not be created. Please, try again.');
-        } else {
-            return $response ;
+
+        // check if fee exists
+        if ( $this->Fees->checkIfFeeExistingForTermClassSession($fee)) {
+            return __(' A fee for the specified parameters already exists');
         }
+        $fee = $this->Fees->createFee($fee);
+        if ($fee) {
+            if ( $postData['create_students_records']) {
+                $this->Fees->createStudentsFeeRecordByClass($fee->id,$fee->class_id);
+            }
+            return __('The fee has been successfully created.');
+
+        }
+        return __('The fee could not be created. Please, try again.');
     }
 
     /**

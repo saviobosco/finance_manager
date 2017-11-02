@@ -49,7 +49,7 @@ class DashboardController extends AppController
 
     public function settings()
     {
-        //Setting::write('Application.school_name', '');
+        Setting::write('Application.school_motto', '');
 
 
         $this->loadModel('Settings.Configurations');

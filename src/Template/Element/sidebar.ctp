@@ -76,7 +76,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <?= $this->Html->link('All',[
+                        <?= $this->Html->link('List',[
                             'plugin'=>null,
                             'controller'=>'FeeCategories',
                             'action'=>'index'
@@ -105,7 +105,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <?= $this->Html->link('All',[
+                        <?= $this->Html->link('List',[
                             'plugin'=>null,
                             'controller'=>'ExpenditureCategories',
                             'action'=>'index'
@@ -134,7 +134,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <?= $this->Html->link('All',[
+                        <?= $this->Html->link('List',[
                             'plugin'=>null,
                             'controller'=>'Fees',
                             'action'=>'index'
@@ -218,7 +218,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <?= $this->Html->link('All',[
+                        <?= $this->Html->link('List ',[
                             'plugin'=>null,
                             'controller'=>'Expenditures',
                             'action'=>'index'
@@ -247,7 +247,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <?= $this->Html->link('All',[
+                        <?= $this->Html->link('List',[
                             'plugin'=>null,
                             'controller'=>'Receipts',
                             'action'=>'index'
@@ -265,7 +265,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <?= $this->Html->link('All',[
+                        <?= $this->Html->link('List',[
                             'plugin'=>null,
                             'controller'=>'Students',
                             'action'=>'index',
@@ -308,7 +308,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <?= $this->Html->link('All Accounts',[
+                        <?= $this->Html->link('List',[
                             'plugin'=>null,
                             'controller'=>'Accounts',
                             'action'=>'index'
@@ -318,7 +318,7 @@
                             ])  ?>
                     </li>
                     <li>
-                        <?= $this->Html->link('Create New Account',[
+                        <?= $this->Html->link('New',[
                             'plugin'=>null,
                             'controller'=>'Accounts',
                             'action'=>'add'
