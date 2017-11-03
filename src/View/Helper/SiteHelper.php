@@ -64,16 +64,20 @@ class SiteHelper extends Helper
         return $this->Html->image('avatar/avatar_placeholder.png',$options);
     }
 
-    public function datePickerInput($name)
+    public function datePickerInput($name,$options = [])
     {
-        return $this->Form->control($name,[
-            'id' => 'datepicker-autoClose',
-            'type' => 'text',
-            'templates'=>[
-                'inputContainer' => '<div class="form-group">{{content}}</div>'
-                ,'input' => '<input class="form-control" type="{{type}}" name="{{name}}"{{attrs}}/>'
-            ]
-        ]);
+        $options = $options + [
+                'data-type' => 'datepicker-autoClose',
+                'type' => 'text',
+                'templates'=>[
+                    'label' => '',
+                    'inputContainer' => '<div class=" col-12-6 m-b-15 input-group {{type}}{{required}}">  {{content}} <span class="input-group-addon"><i class="fa fa-calendar"></i></span></div>',
+                    'input' => '<input class="form-control" type="{{type}}" name="{{name}}"{{attrs}}/>'
+                    ]
+        ];
+        return
+            $this->Form->label($name) . // Joining both of them
+            $this->Form->control($name,$options);
     }
 
 }
