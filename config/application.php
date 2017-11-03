@@ -9,5 +9,6 @@ return [
         'Version' => '0.1',
         'Author' => 'Saviobosco',
         'Company' => 'Upsilion Technologies',
+        'link' => 'http//:upsitech.com'
     ]
 ];
