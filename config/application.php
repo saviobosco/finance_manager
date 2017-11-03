@@ -4,7 +4,8 @@ return [
      * School System Application Configuration
      */
     'Application' => [
-        'Name' => 'Finance Manager',
+        'name' => 'Finance Manager',
+        'type' => 'lite',
         'Motto' => '',
         'Version' => '0.1',
         'Author' => 'Saviobosco',
