@@ -127,4 +127,40 @@ class ExpendituresTable extends Table
             $data['date'] = new Date($data['date']); // Converts the birth date Date properly
         }
     }
+
+    public function getExpenditureWithPassedValue($data)
+    {
+        $query = $this->find()->enableHydration(false);
+        // checking which value was passed to query
+        switch ($data['query'] ) {
+            case 'week':
+                $query->where(['WEEK(created,1)'=>(new Date())->toWeek()]);
+                break;
+            case 'month':
+                $query->where(['MONTH(created)'=>(new Date())->month]);
+                break;
+            case 'year':
+                $query->where(['YEAR(created)'=>(new Date())->year]);
+                break;
+            default:
+                // perform nothing
+        }
+        return $query;
+    }
+
+    public function getExpenditureWithDateRange($startDate,$endDate)
+    {
+        $query = $this->find()
+            ->where(function ($exp,$q) use ($startDate,$endDate) {
+                return $exp ->addCase(
+                    [
+                        // todo : refactor this particular section
+                        $q->newExpr()->between('created',$startDate,$endDate)
+                    ]
+                );
+            });
+
+        return $query;
+
+    }
 }

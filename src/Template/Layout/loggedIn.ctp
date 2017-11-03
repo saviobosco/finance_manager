@@ -104,7 +104,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     </div>
     <!-- end #content -->
     <div class="footer">
-        <p class="pull-right"><?= Configure::read('Application.Name') ?> version <?= Configure::read('Application.Version') ?> Powered by <a class="text-orange" target="_blank" href="http://www.upsitech.com" title="Visit upsitech" data-toggle='tooltip' trigger="focus" ><?= Configure::read('Application.Company') ?></a> All copyright reserved. &copy;</p>
+        <p class="pull-right"><?= Configure::read('Application.Name') ?> version <?= Configure::read('Application.Version') ?> Powered by <a class="text-orange" target="_blank" href="<?= Configure::read('Application.link') ?>" title="Visit <?= Configure::read('Application.Company')?>" data-toggle='tooltip' trigger="focus" ><?= Configure::read('Application.Company') ?></a> All copyright reserved. &copy;</p>
     </div>
 
 

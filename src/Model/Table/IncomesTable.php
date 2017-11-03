@@ -1,6 +1,8 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Datasource\ConnectionManager;
+use Cake\I18n\Date;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -72,6 +74,42 @@ class IncomesTable extends Table
             ->notEmpty('year');
 
         return $validator;
+    }
+
+    public function getIncomeWithPassedValue($data)
+    {
+        $query = $this->find()->enableHydration(false);
+        // checking which value was passed to query
+        switch ($data['query'] ) {
+            case 'week':
+                $query->where(['WEEK(created,1)'=>(new Date())->toWeek()]);
+                break;
+            case 'month':
+                $query->where(['MONTH(created)'=>(new Date())->month]);
+                break;
+            case 'year':
+                $query->where(['YEAR(created)'=>(new Date())->year]);
+                break;
+            default:
+                // perform nothing
+        }
+        return $query;
+    }
+
+    public function getIncomeWithDateRange($startDate,$endDate)
+    {
+        $query = $this->find()
+            ->where(function ($exp,$q) use ($startDate,$endDate) {
+                return $exp ->addCase(
+                    [
+                        // todo : refactor this particular section
+                        $q->newExpr()->between('created',$startDate,$endDate)
+                    ]
+                );
+            });
+
+        return $query;
+
     }
 
 }

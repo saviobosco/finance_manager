@@ -16,11 +16,11 @@ $this->Form->templates($edittemplates);
             <div class="panel-body">
 
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#default-tab-1" data-toggle="tab">Application Settings</a></li>
-                    <li class=""><a href="#default-tab-2" data-toggle="tab"> Payment Settings </a></li>
+                    <li class="active"><a href="#application-settings" data-toggle="tab">Application Settings</a></li>
+                    <li class=""><a href="#payment-settings" data-toggle="tab"> Payment Settings </a></li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane fade active in" id="default-tab-1">
+                    <div class="tab-pane fade active in" id="application-settings">
 
                         <?php
                         echo $this->Form->create('',['class' => 'form-horizontal' ]);
@@ -53,9 +53,23 @@ $this->Form->templates($edittemplates);
                         ?>
 
                     </div>
-                    <div class="tab-pane fade" id="default-tab-2">
+                    <div class="tab-pane fade" id="payment-settings">
+
+                        <?php if(!empty($file)) : ?>
+                            <div>
+                                <?= $this->Html->image($file[0]) ?>
+                            </div>
+                        <?php endif; ?>
+
+
                         <p> Upload the school Image Banner</p>
-                        <?= $this->Form->create(null, ['enctype' => 'multipart/form-data']); ?>
+                        <?= $this->Form->create(null, [
+                            'url'=>[
+                                'action'=>'uploadBannerImage'
+                            ],
+                            'enctype' => 'multipart/form-data'
+                        ]); ?>
+
                         <?= $this->form->input('banner',['type'=>'file']) ?>
                         <?= $this->Form->submit(__('Upload'),['class'=>'btn btn-primary btn-sm m-b-10']) ?>
 

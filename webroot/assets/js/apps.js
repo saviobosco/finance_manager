@@ -993,7 +993,7 @@ var handleDashboardDatepicker = function() {
 };
 
 var handleDatepicker = function() {
-    $('#datepicker-autoClose').datepicker({
+    $("input[data-type=datepicker-autoClose]").datepicker({
         todayHighlight: true,
         autoclose: true
     });

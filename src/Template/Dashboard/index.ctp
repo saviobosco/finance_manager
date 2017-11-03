@@ -47,7 +47,7 @@
                 </p>
             </div>
             <div class="stats-link">
-                <a href="javascript:;">View Detail <i class="fa fa-arrow-circle-o-right"></i></a>
+                <?= $this->Html->link('View Detail <i class="fa fa-arrow-circle-o-right"></i>',['controller'=>'Dashboard','action'=>'expenditureStatistics'],['escape'=>false]) ?>
             </div>
         </div>
     </div>
