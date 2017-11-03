@@ -29,7 +29,7 @@ class ReceiptsController extends AppController
                 'Payments',
             ],
             'order' => [
-                'created' => 'desc'
+                'created' => 'ASC'
             ]
         ];
         $receipts = $this->paginate($this->Receipts);

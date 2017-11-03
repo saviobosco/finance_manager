@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -69,6 +70,15 @@ class FeeCategoriesTable extends Table
         return $this->find('all')
             ->select(['id','type','income_amount'])
             ->toArray();
+    }
+
+    public function deleteFeeCategory(EntityInterface $feeCategory)
+    {
+        if ((bool)$this->Fees->find()->where(['fee_category_id' => $feeCategory->id])->first()) {
+            throw new \PDOException;
+        }
+        $this->delete($feeCategory);
+        return true;
     }
 
 }

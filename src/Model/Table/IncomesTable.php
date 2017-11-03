@@ -93,7 +93,7 @@ class IncomesTable extends Table
             default:
                 // perform nothing
         }
-        return $query;
+        return $query->toArray();
     }
 
     public function getIncomeWithDateRange($startDate,$endDate)
@@ -108,7 +108,7 @@ class IncomesTable extends Table
                 );
             });
 
-        return $query;
+        return $query->toArray();
 
     }
 

@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -101,5 +102,14 @@ class StudentFeesTable extends Table
         $rules->add($rules->existsIn(['fee_id'], 'Fees'));
 
         return $rules;
+    }
+
+    public function deleteStudentFee(EntityInterface $studentFee)
+    {
+        if ( (bool)$this->StudentFeePayments->find()->where(['student_fee_id'=>$studentFee->id])->first()) {
+            throw new \PDOException;
+        }
+        $this->delete($studentFee);
+        return true;
     }
 }

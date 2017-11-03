@@ -99,13 +99,21 @@ class FeeCategoriesController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $feeCategory = $this->FeeCategories->get($id);
-        if ($this->FeeCategories->delete($feeCategory)) {
-            $this->Flash->success(__('The fee category has been deleted.'));
-        } else {
-            $this->Flash->error(__('The fee category could not be deleted. Please, try again.'));
+        try {
+            $feeCategory = $this->FeeCategories->get($id);
+            if ($this->FeeCategories->deleteFeeCategory($feeCategory)) {
+                $this->Flash->success(__('The fee category has been deleted.'));
+            } else {
+                $this->Flash->error(__('The fee category could not be deleted. Please, try again.'));
+            }
+
+            return $this->redirect(['action' => 'index']);
+
+        } catch ( \PDOException $e ) {
+            $this->Flash->error(__('This fee category cannot be deleted because it has fees attached to it.'));
+            return $this->redirect(['action' => 'index']);
         }
 
-        return $this->redirect(['action' => 'index']);
+
     }
 }

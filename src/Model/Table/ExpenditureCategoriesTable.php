@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -8,6 +9,8 @@ use Cake\Validation\Validator;
 
 /**
  * ExpenditureCategories Model
+ *
+ * @property \App\Model\Table\ExpendituresTable|\Cake\ORM\Association\HasMany $Expenditures
  *
  * @method \App\Model\Entity\ExpenditureCategory get($primaryKey, $options = [])
  * @method \App\Model\Entity\ExpenditureCategory newEntity($data = null, array $options = [])
@@ -37,6 +40,10 @@ class ExpenditureCategoriesTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+
+        $this->hasMany('Expenditures',[
+            'foreignKey' => 'expenditure_category_id'
+        ]);
     }
 
     /**
@@ -56,5 +63,14 @@ class ExpenditureCategoriesTable extends Table
             ->notEmpty('type');
 
         return $validator;
+    }
+
+    public function deleteExpenditureCategory(EntityInterface $expenditureCategory)
+    {
+        if ((bool)$this->Expenditures->find()->where(['expenditure_category_id'=>$expenditureCategory->id])->first()) {
+            throw new \PDOException;
+        }
+        $this->delete($expenditureCategory);
+        return true;
     }
 }

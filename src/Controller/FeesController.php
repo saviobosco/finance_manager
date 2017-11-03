@@ -176,7 +176,7 @@ class FeesController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         try {
             $fee = $this->Fees->get($id);
-            if ($this->Fees->delete($fee)) {
+            if ($this->Fees->deleteFee($fee)) {
                 $this->Flash->success(__('The fee has been deleted.'));
             } else {
                 $this->Flash->error(__('The fee could not be deleted. Please, try again.'));

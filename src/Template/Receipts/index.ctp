@@ -34,7 +34,7 @@
                                 <?= $this->Html->link('<i class="fa fa-print"></i>Print',['action'=>'printReceipt',$receipt->id],['class'=>'btn btn-inverse btn-sm','escape'=>false]) ?>
                                 <?= $this->Html->link(__('View'), ['action' => 'view', $receipt->id],['class'=>'btn btn-primary btn-sm','escape'=>false]) ?>
                                 <?= $this->Html->link(__('Edit'), ['action' => 'edit', $receipt->id],['class'=>'btn btn-info btn-sm','escape'=>false]) ?>
-                                <?= $this->Form->postLink('<i class="fa fa-trash"></i>', ['action' => 'delete', $receipt->id], ['confirm' => __('Are you sure you want to delete # {0}?', $receipt->id),'class'=>'btn btn-danger btn-sm','escape'=>false]) ?>
+                                <?= $this->Form->postLink('<i class="fa fa-trash"></i>', ['action' => 'delete', $receipt->id], ['confirm' => __('Are you sure you want to delete # {0}?', $receipt->id),'class'=>'btn btn-danger btn-sm','escape'=>false,'disabled'=>true]) ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>

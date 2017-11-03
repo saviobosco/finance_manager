@@ -106,13 +106,20 @@ class StudentFeesController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $studentFee = $this->StudentFees->get($id);
-        if ($this->StudentFees->delete($studentFee)) {
-            $this->Flash->success(__('The student fee has been deleted.'));
-        } else {
-            $this->Flash->error(__('The student fee could not be deleted. Please, try again.'));
+        try {
+            $studentFee = $this->StudentFees->get($id);
+            if ($this->StudentFees->deleteStudentFee($studentFee)) {
+                $this->Flash->success(__('The student fee has been deleted.'));
+            } else {
+                $this->Flash->error(__('The student fee could not be deleted. Please, try again.'));
+            }
+            return $this->redirect($this->request->referer());
+
+        } catch ( \PDOException $e ) {
+            $this->Flash->error(__('This fee cannot be deleted because a payment has been made for it.'));
+
+            return $this->redirect($this->request->referer());
         }
 
-        return $this->redirect($this->request->referer());
     }
 }

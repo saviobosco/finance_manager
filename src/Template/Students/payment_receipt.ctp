@@ -17,7 +17,7 @@ $this->layout = 'receipt';
                                <thead>
                                <tr>
                                    <td colspan="6">
-                                       <?= $this->Html->image('banner.png',['class'=>'img-responsive']) ?>
+                                       <?= $this->Html->image('image-banner.png',['class'=>'img-responsive']) ?>
                                    </td>
                                </tr>
                                <tr>
@@ -74,7 +74,7 @@ $this->layout = 'receipt';
                                 <thead>
                                 <tr>
                                     <td colspan="6">
-                                        <?= $this->Html->image('banner.png',['class'=>'img-responsive']) ?>
+                                        <?= $this->Html->image('image-banner.png',['class'=>'img-responsive']) ?>
                                     </td>
                                 </tr>
                                 <tr>

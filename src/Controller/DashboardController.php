@@ -62,29 +62,29 @@ class DashboardController extends AppController
                 } else {
                     $incomes = $this->Incomes->getIncomeWithPassedValue($postData);
                 }
+                $this->set(compact('incomes','startDate','endDate'));
+                switch($postData['query']) {
+                    case 'week':
+                        $this->render('/Element/incomeStatistics/ajax_return_for_week','ajax');
+                        break;
+                    case 'month':
+                        $this->render('/Element/incomeStatistics/ajax_return_for_month','ajax');
+                        break;
+                    case 'year':
+                        $this->render('/Element/incomeStatistics/ajax_return_for_year','ajax');
+                        break;
+                    case 'custom':
+                        $this->render('/Element/incomeStatistics/ajax_return_for_custom','ajax');
+                        break;
+                    default:
+                        $this->render('/Element/incomeStatistics/no_value','ajax');
+                }
             } catch ( \PDOException $e ) {
                 if (strpos($e->getMessage(),'General error: 1 no such function:') ) {
                     $this->set('message',__('This application version does not support this operation'));
                     $this->render('/Element/incomeStatistics/error','ajax');
                     return;
                 }
-            }
-            $this->set(compact('incomes','startDate','endDate'));
-            switch($postData['query']) {
-                case 'week':
-                    $this->render('/Element/incomeStatistics/ajax_return_for_week','ajax');
-                    break;
-                case 'month':
-                    $this->render('/Element/incomeStatistics/ajax_return_for_month','ajax');
-                    break;
-                case 'year':
-                    $this->render('/Element/incomeStatistics/ajax_return_for_year','ajax');
-                    break;
-                case 'custom':
-                    $this->render('/Element/incomeStatistics/ajax_return_for_custom','ajax');
-                    break;
-                default:
-                    $this->render('/Element/incomeStatistics/no_value','ajax');
             }
         }
 
@@ -147,8 +147,8 @@ class DashboardController extends AppController
     {
         //Setting::write('Application.school_motto', '');
 
-        $dir = new Folder(WWW_ROOT.'img/banner');
-        $file = $dir->find('result-banner.png', true);
+        $dir = new Folder(WWW_ROOT.'img');
+        $file = $dir->find('image-banner.png', true);
 
         $this->loadModel('Settings.Configurations');
         $this->prefixes = Configure::read('Settings.Prefixes');
@@ -240,7 +240,7 @@ class DashboardController extends AppController
                 $this->Flash->error(__('No file selected.'));
                 return $this->redirect($this->request->referer());
             }
-            $file = new File(WWW_ROOT.'img/banner/image-banner.png');
+            $file = new File(WWW_ROOT.'img/image-banner.png');
             if ( $file->exists() ) {
                 $file->delete();
             }
@@ -248,10 +248,6 @@ class DashboardController extends AppController
                 $this->Flash->success(__('File was successfully uploaded'));
                 return $this->redirect($this->request->referer());
             }
-            // check if file exists
-            // delete the file
-            // upload the new file
-            //debug($this->request->data); exit;
         }
     }
 }

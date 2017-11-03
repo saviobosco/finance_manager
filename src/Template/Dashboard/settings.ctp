@@ -57,7 +57,7 @@ $this->Form->templates($edittemplates);
 
                         <?php if(!empty($file)) : ?>
                             <div>
-                                <?= $this->Html->image($file[0]) ?>
+                                <?= $this->Html->image($file[0],['class'=>'img-responsive']) ?>
                             </div>
                         <?php endif; ?>
 

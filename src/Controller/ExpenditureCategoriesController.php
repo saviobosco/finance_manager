@@ -99,13 +99,19 @@ class ExpenditureCategoriesController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $expenditureCategory = $this->ExpenditureCategories->get($id);
-        if ($this->ExpenditureCategories->delete($expenditureCategory)) {
-            $this->Flash->success(__('The expenditure category has been deleted.'));
-        } else {
-            $this->Flash->error(__('The expenditure category could not be deleted. Please, try again.'));
+        try {
+            $expenditureCategory = $this->ExpenditureCategories->get($id);
+            if ($this->ExpenditureCategories->deleteExpenditureCategory($expenditureCategory)) {
+                $this->Flash->success(__('The expenditure category has been deleted.'));
+            } else {
+                $this->Flash->error(__('The expenditure category could not be deleted. Please, try again.'));
+            }
+
+            return $this->redirect(['action' => 'index']);
+        } catch ( \PDOException $e ) {
+            $this->Flash->error(__('This expenditure category cannot be deleted because an has been record on it.'));
+            return $this->redirect(['action' => 'index']);
         }
 
-        return $this->redirect(['action' => 'index']);
     }
 }

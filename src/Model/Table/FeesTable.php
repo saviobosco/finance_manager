@@ -432,4 +432,15 @@ class FeesTable extends Table
         return $feeCategories;
     }
 
+    public function deleteFee(EntityInterface $fee)
+    {
+        // check if fee exist in student_fee_payments
+        if ( (bool)$this->StudentFees->StudentFeePayments->find()->where(['fee_id'=>$fee->id])->first()) {
+            // Throw PdoException
+            throw new \PDOException;
+        }
+        $this->delete($fee);
+        return true;
+    }
+
 }

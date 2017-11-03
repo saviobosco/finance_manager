@@ -145,7 +145,7 @@ class ExpendituresTable extends Table
             default:
                 // perform nothing
         }
-        return $query;
+        return $query->toArray();
     }
 
     public function getExpenditureWithDateRange($startDate,$endDate)
@@ -160,7 +160,7 @@ class ExpendituresTable extends Table
                 );
             });
 
-        return $query;
+        return $query->toArray();
 
     }
 }
