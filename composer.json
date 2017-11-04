@@ -15,7 +15,8 @@
         "ircmaxell/random-lib": "^1.2",
         "skie/cakephp-search": "dev-master",
         "burzum/file-storage": "1.1.*",
-        "imagine/imagine": "^0.7.1"
+        "imagine/imagine": "^0.7.1",
+        "dereuromark/cakephp-ajax": "^1.1"
     },
     "require-dev": {
         "psy/psysh": "@stable",
