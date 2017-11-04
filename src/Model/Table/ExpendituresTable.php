@@ -130,17 +130,17 @@ class ExpendituresTable extends Table
 
     public function getExpenditureWithPassedValue($data)
     {
-        $query = $this->find()->enableHydration(false);
+        $query = $this->find()->contain(['ExpenditureCategories'])->enableHydration(false);
         // checking which value was passed to query
         switch ($data['query'] ) {
             case 'week':
-                $query->where(['WEEK(created,1)'=>(new Date())->toWeek()]);
+                $query->where(['WEEK(Expenditures.created,1)'=>(new Date())->toWeek()]);
                 break;
             case 'month':
-                $query->where(['MONTH(created)'=>(new Date())->month]);
+                $query->where(['MONTH(Expenditures.created)'=>(new Date())->month]);
                 break;
             case 'year':
-                $query->where(['YEAR(created)'=>(new Date())->year]);
+                $query->where(['YEAR(Expenditures.created)'=>(new Date())->year]);
                 break;
             default:
                 // perform nothing

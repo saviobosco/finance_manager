@@ -6,21 +6,25 @@
                 <thead>
                 <tr>
                     <th> #</th>
+                    <th> Category</th>
+                    <th> Purpose</th>
                     <th> Amount</th>
-                    <th> Date Recorded</th>
+                    <th> Date</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php foreach ( $expenditures as $expenditure) : ?>
                     <tr>
                         <td> <?= $expenditure['id'] ?> </td>
+                        <td> <?= $expenditure['expenditure_category']['type'] ?></td>
+                        <td> <?= $expenditure['purpose'] ?></td>
                         <td data-amount="<?= $expenditure['amount'] ?>" > <?= $this->Currency->displayCurrency($expenditure['amount']) ?> </td>
-                        <td> <?= $expenditure['created'] ?> </td>
+                        <td> <?= (new \Cake\I18n\Date($expenditure['date']))->format('d-m-Y') ?> </td>
                     </tr>
                 <?php endforeach; ?>
                 <tr>
                     <th> Total</th>
-                    <td data-total="total" colspan="2">
+                    <td style="text-align:left" data-total="total" colspan="4">
 
                     </td>
                 </tr>
