@@ -388,18 +388,51 @@ try {
         </style>
     </head>
     <body>
-    <div class="container">
+    <div class="container" style="margin-top: 50px;">
         <div class="row">
+            <div class="col-sm-12">
+                <div class="jumbotron">
+                    <h4 class="text-center">Finance Manager Application Setup</h4>
+                    <p class="text-danger"> <i class="fa fa-warning"> </i> Please make sure you are connected to the internet before running this process.  </p>
 
-        </div>
-        <div class="col-sm-12">
-            <div class="jumbotron text-center">
-                <p class="text-danger"> <i class="fa fa-warning"> </i> Please make sure you are connected to the internet before running this process.  </p>
-                <p> Please your system needs to be connected to the internet for this process to work</p>
+                    <form class="form" id="installation-form">
+                        <div class="form-group">
+                            <label> School Name</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-institution"></i> </span>
+                                <input id="school-name" type="text" class="form-control" placeholder="Institution Name" aria-label="School Name" aria-describedby="School Name">
+                            </div>
+                        </div>
 
-                <button id="start" class="btn btn-primary btn-lg" > Click To Install </button>
+                        <div class="form-group">
+                            <label> Proprietor Full Name </label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user"></i> </span>
+                                <input id="full-name" type="text" class="form-control" placeholder="Proprietor Full Name" aria-label="Proprietor-FullName" aria-describedby="Proprietor-FullName">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label> Proprietor Phone Number </label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-phone"></i> </span>
+                                <input id="phone-number" type="text" class="form-control" placeholder="Proprietor Phone Number" aria-label="PhoneNumber" aria-describedby="PhoneNumber">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label> School Address </label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-location-arrow"></i> </span>
+                                <input id="address" type="text" class="form-control" placeholder="School Address" aria-label="SchoolAddress" aria-describedby="SchoolAddress">
+                            </div>
+                        </div>
+                        <input type="submit" id="install-button" class=" btn btn-primary" value="Complete Application Setup" />
+                    </form>
+                </div>
             </div>
         </div>
+
         <div id="installation" class="row" style="display:none">
             <div class="col-md-12">
 
@@ -442,23 +475,15 @@ try {
 
         $(function() {
 
-            $('#start').on('click', function(e) {
+            $('#installation-form').on('submit', function(e) {
                 e.preventDefault();
 
-                //$('#start').addClass('rotate');
                 setTimeout(function(){
-                    //$('#splash').hide();
                     $('#installation').show();
 
                     var $requirementsList = $('.requirements-list');
                     var $composerList = $('.composer-list');
                     var $cakeList = $('.cake-list');
-                    //var appDir = $('#app_dir').val();
-                    //var currentDir = $('#current_dir').text();
-
-                    //$('#go_to_your_app').attr('href', appDir);
-                    //$('#go_to_mixer').attr('href', appDir + '/mixer');
-                    //$('#install_dir').text(currentDir + appDir);
 
                     runRequirementsSteps($requirementsList, $composerList, $cakeList );
                 }, 1000);
@@ -669,6 +694,20 @@ try {
             });
         }
 
+
+        $('#full-name, #school-name, #phone-number,#address').on('change', function() {
+            var schoolName = $('#school-name');
+            var fullName = $('#full-name');
+            var phoneNumber = $('#phone-number');
+            var schoolAddress = $('#address');
+
+            if ((schoolName.val() === '') || (fullName.val() === '') || (phoneNumber.val() === '') || (schoolAddress.val() === '') ) {
+                $('#install-button').prop('disabled', true);
+            } else {
+                $('#install-button').prop('disabled', false);
+            }
+        });
+        $('#full-name, #school-name, #phone-number,#address').change();
 
     </script>
 </html>
