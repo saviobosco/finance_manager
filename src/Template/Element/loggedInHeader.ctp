@@ -27,9 +27,6 @@ use Cake\Core\Configure;
                 <ul class="dropdown-menu animated fadeInLeft">
                     <li class="arrow"></li>
                     <li>
-                        <?= $this->Html->link('Edit Profile',['plugin'=>null,'controller'=>'Accounts','action'=>'edit']) ?>
-                    </li>
-                    <li>
                         <?= $this->Html->link('View Profile',['plugin'=>null,'controller'=>'Accounts','action'=>'profile']) ?>
                     </li>
                     <li>
