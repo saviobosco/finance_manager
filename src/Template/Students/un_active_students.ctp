@@ -40,7 +40,6 @@ $this->Form->setTemplates($formTemplates);
                         <th scope="col"><?= h('Admission Number') ?></th>
                         <th scope="col"><?= $this->Paginator->sort('first_name') ?></th>
                         <th scope="col"><?= $this->Paginator->sort('last_name') ?></th>
-                        <th scope="col"><?= $this->Paginator->sort('gender') ?></th>
                         <th scope="col"><?= $this->Paginator->sort('class_id') ?></th>
                         <th scope="col" class="actions"><?= __('Actions') ?></th>
                     </tr>
@@ -51,23 +50,8 @@ $this->Form->setTemplates($formTemplates);
                             <td><?= h($student->id) ?></td>
                             <td><?= h($student->first_name) ?></td>
                             <td><?= h($student->last_name) ?></td>
-                            <td><?= h($student->gender) ?></td>
                             <td><?= h($student->class->class) ?></td>
                             <td class="actions">
-                                <?= $this->Html->link('Pay Fees <i class="fa fa-money"></i>',[
-                                    'controller'=>'Students',
-                                    'action'=>'getStudentFees',
-                                    '?'=>[
-                                        'student_id'=>$student->id
-                                    ]
-                                ], [
-                                        'escape' => false,
-                                        'class'=>'btn btn-sm btn-primary m-r-5'
-                                    ]
-                                ) ?>
-                                <?= $this->Html->link(__('View'), ['action' => 'view','?'=>['student_id'=>$student->id]],['escape'=>false,'class'=>'btn btn-primary btn-sm']) ?>
-                                <?= $this->Html->link(__('Edit'), ['action' => 'edit', $student->id],['escape'=>false,'class'=>'btn btn-info btn-sm']) ?>
-                                <?= $this->Form->postLink('<i class="fa fa-trash"></i>', ['action' => 'delete', $student->id], ['confirm' => __('Are you sure you want to delete # {0}?', $student->id),'escape'=>false,'class'=>'btn btn-danger btn-sm']) ?>
                                 <?= ( $student->status) ?
                                  $this->Form->postLink('<i class="fa fa-times"></i>', ['action' => 'deactivate', $student->id], ['confirm' => __('Are you sure you want to deactivate # {0}?', $student->id),'title'=>'Deactivate','escape'=>false,'class'=>'btn btn-inverse btn-sm'])
                                 : $this->Form->postLink('<i class="fa fa-check"></i>', ['action' => 'activate', $student->id], ['confirm' => __('Are you sure you want to activate # {0}?', $student->id),'title'=>'Activate','escape'=>false,'class'=>'btn btn-success btn-sm'])

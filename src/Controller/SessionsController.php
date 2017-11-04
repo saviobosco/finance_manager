@@ -134,13 +134,19 @@ class SessionsController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $session = $this->Sessions->get($id);
-        if ($this->Sessions->delete($session)) {
-            $this->Flash->success(__('The session has been deleted.'));
-        } else {
-            $this->Flash->error(__('The session could not be deleted. Please, try again.'));
+        try {
+            $session = $this->Sessions->get($id);
+            if ($this->Sessions->deleteSession($session)) {
+                $this->Flash->success(__('The session has been deleted.'));
+            } else {
+                $this->Flash->error(__('The session could not be deleted. Please, try again.'));
+            }
+
+            return $this->redirect(['action' => 'index']);
+        } catch ( \PDOException $e) {
+            $this->Flash->error(__('This session cannot be deleted because its attached to fees'));
+            return $this->redirect(['action' => 'index']);
         }
 
-        return $this->redirect(['action' => 'index']);
     }
 }

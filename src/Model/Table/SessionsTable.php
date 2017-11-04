@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -86,5 +87,14 @@ class SessionsTable extends Table
 
 
         return $validator;
+    }
+
+    public function deleteSession(EntityInterface $session)
+    {
+        if ( (bool)$this->Fees->find()->where(['session_id'=>$session->id])->first()) {
+            throw new \PDOException;
+        }
+        $this->delete($session);
+        return true;
     }
 }

@@ -65,6 +65,39 @@ class StudentsController extends AppController
         $this->set('_serialize', ['students']);
     }
 
+    public function unActiveStudents()
+    {
+        if ( empty($this->request->getQuery('class_id'))) {
+            $this->paginate = [
+                'limit' => 1000,
+                'maxLimit' => 1000,
+                'contain' => ['Classes'],
+                'conditions' => [
+                    'Students.status'   => 0,
+                ],
+                // Place the result in ascending order according to the class.
+                'order' => [
+                    'class_id' => 'asc'
+                ]
+            ];
+        }
+        else {
+            $this->paginate = [
+                'limit' => 1000,
+                'maxLimit' => 1000,
+                'contain' => ['Classes'],
+                'conditions' => [
+                    'Students.status'   => 0,
+                    'Students.class_id' => $this->request->getQuery('class_id')
+                ]
+            ];
+        }
+        $students = $this->paginate($this->Students);
+        $classes = $this->Students->Classes->find('list',['limit' => 200]);
+        $this->set(compact('students','sessions','classes'));
+        $this->set('_serialize', ['students']);
+    }
+
     /**
      * View method
      *
@@ -168,15 +201,59 @@ class StudentsController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
+        try {
+            $student = $this->Students->get($id);
+            if ($this->Students->deleteStudent($student)) {
+                $this->Flash->success(__('The student has been deleted.'));
+            } else {
+                $this->Flash->error(__('The student could not be deleted. Please, try again.'));
+            }
+
+            return $this->redirect(['action' => 'index']);
+        } catch ( \PDOException $e ) {
+            $this->Flash->error(__('Please you cannot delete a student with fees. First delete the student fees and try again'));
+            return $this->redirect(['action' => 'index']);
+        }
+    }
+
+    /**
+     * @param null $id
+     * @return \Cake\Http\Response|null
+     * The student deactivation action handler
+     */
+    public function deactivate($id = null)
+    {
+        $this->request->allowMethod(['post', 'patch','put']);
         $student = $this->Students->get($id);
-        if ($this->Students->delete($student)) {
-            $this->Flash->success(__('The student has been deleted.'));
+        $student->status= 0;
+        if ($this->Students->save($student)) {
+            $this->Flash->success(__('The student has been deactivated.'));
         } else {
-            $this->Flash->error(__('The student could not be deleted. Please, try again.'));
+            $this->Flash->error(__('The student could not be deactivated. Please, try again.'));
         }
 
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect($this->request->referer());
     }
+
+    /**
+     * @param null $id
+     * @return \Cake\Http\Response|null
+     * The student activation action handler
+     */
+    public function activate($id = null)
+    {
+        $this->request->allowMethod(['post', 'patch','put']);
+        $student = $this->Students->get($id);
+        $student->status= 1;
+        if ($this->Students->save($student)) {
+            $this->Flash->success(__('The student has been activated.'));
+        } else {
+            $this->Flash->error(__('The student could not be activated. Please, try again.'));
+        }
+
+        return $this->redirect($this->request->referer());
+    }
+
 
     public function getStudentFees()
     {

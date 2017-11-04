@@ -25,8 +25,21 @@ class ReceiptsController extends AppController
     {
         $this->paginate = [
             'contain' => [
-                'Students',
+                'Students' => [
+                    'fields'=>[
+                        'id',
+                        'first_name',
+                        'last_name'
+                    ]
+                ],
                 'Payments',
+                'CreatedByUser'=>[
+                    'fields'=>[
+                        'id',
+                        'first_name',
+                        'last_name'
+                    ]
+                ]
             ],
             'order' => [
                 'created' => 'ASC'
@@ -169,7 +182,7 @@ class ReceiptsController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         try {
             $receipt = $this->Receipts->get($id);
-            if ($this->Receipts->delete($receipt)) {
+            if ($this->Receipts->deleteReceipt($receipt)) {
                 $this->Flash->success(__('The receipt has been deleted.'));
             } else {
                 $this->Flash->error(__('The receipt could not be deleted. Please, try again.'));

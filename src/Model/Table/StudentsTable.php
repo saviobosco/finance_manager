@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -149,6 +150,16 @@ class StudentsTable extends Table
 
         return $rules;
     }
+
+    public function deleteStudent(EntityInterface $student )
+    {
+        if ( (bool)$this->StudentFees->find()->where(['student_id'=>$student->id])->first() ) {
+            throw new \PDOException;
+        }
+        $this->delete($student);
+        return true;
+    }
+
 
     public function getStudentFees($student_id)
     {

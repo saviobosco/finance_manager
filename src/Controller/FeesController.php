@@ -185,7 +185,7 @@ class FeesController extends AppController
             return $this->redirect(['action' => 'index']);
 
         } catch ( \PDOException $e ) {
-            $this->Flash->error(__('This fee cannot be deleted because a payment has been made for it.'));
+            $this->Flash->error(__('This fee cannot be deleted because a payment has been made on it.'));
             return $this->redirect(['action' => 'index']);
         }
 

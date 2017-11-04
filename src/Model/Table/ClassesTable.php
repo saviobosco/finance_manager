@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -78,8 +79,12 @@ class ClassesTable extends Table
         return $validator;
     }
 
-    public function beforeSave(Event $event, $entity )
+    public function deleteClass(EntityInterface $class)
     {
-
+        if ( (bool)$this->Fees->find()->where(['class_id'=>$class->id])->first()) {
+            throw new \PDOException;
+        }
+        $this->delete($class);
+        return true;
     }
 }

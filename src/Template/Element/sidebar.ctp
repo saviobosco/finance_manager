@@ -299,6 +299,17 @@
                             ]
                         )  ?>
                     </li>
+                    <li>
+                        <?= $this->Html->link('UnActive Students',[
+                            'plugin'=>null,
+                            'controller'=>'Students',
+                            'action'=>'unActiveStudents'
+                        ],
+                            [
+                                'escape' => false
+                            ]
+                        )  ?>
+                    </li>
                 </ul>
             </li>
             <li class="has-sub">

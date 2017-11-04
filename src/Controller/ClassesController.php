@@ -99,13 +99,19 @@ class ClassesController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $class = $this->Classes->get($id);
-        if ($this->Classes->delete($class)) {
-            $this->Flash->success(__('The class has been deleted.'));
-        } else {
-            $this->Flash->error(__('The class could not be deleted. Please, try again.'));
+        try {
+            $class = $this->Classes->get($id);
+            if ($this->Classes->deleteClass($class)) {
+                $this->Flash->success(__('The class has been deleted.'));
+            } else {
+                $this->Flash->error(__('The class could not be deleted. Please, try again.'));
+            }
+
+            return $this->redirect(['action' => 'index']);
+        } catch ( \PDOException $e ) {
+            $this->Flash->error(__('This class cannot be deleted because its attached to fees'));
+            return $this->redirect(['action' => 'index']);
         }
 
-        return $this->redirect(['action' => 'index']);
     }
 }

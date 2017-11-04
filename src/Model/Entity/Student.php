@@ -20,6 +20,7 @@ use Cake\ORM\Entity;
  * @property string $guardian_phone_number
  * @property string $session_id
  * @property int $class_id
+ * @property int $status
  * @property string $photo
  * @property string $photo_dir
  * @property \Cake\I18n\FrozenTime $created

@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -102,5 +103,14 @@ class ReceiptsTable extends Table
             'total_amount_paid' => $total
         ]);
         return $this->save($newData);
+    }
+
+    public function deleteReceipt(EntityInterface $receipt)
+    {
+        if ( (bool) $this->StudentFeePayments->find()->where(['receipt_id'=>$receipt->id])->first()) {
+            throw new \PDOException;
+        }
+        $this->delete($receipt);
+        return true;
     }
 }
