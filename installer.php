@@ -301,7 +301,9 @@ class AppInstaller {
 
         $output = $this->_runComposer($input);
 
-
+        if (strpos($output, 'Generating autoload files') === false) {
+            throw new Exception("Error installing packages");
+        }
 
         return $output;
     }
@@ -319,12 +321,16 @@ class AppInstaller {
 
         $log .= "\n";
 
-        $log .= $this->_runComposer([
+        if (strpos($log, 'Generating autoload files') === false) {
+            throw new Exception("Error installing packages");
+        }
+
+        /*$log .= $this->_runComposer([
             'command' => 'run-script',
             'script' => 'post-install-cmd',
             '--no-interaction' => true,
             //'--working-dir' => $this->installDir,
-        ]);
+        ]);*/
 
         // copy the contents of settings.json and replace it with the one in the main app
         /*$mainSettingsFile = file_get_contents('settings.json');
