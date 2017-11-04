@@ -98,6 +98,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         <!-- begin page-header -->
         <h1 class="page-header"> Finance Manager <small> manage your income and expenses in one place </small></h1>
         <!-- end page-header -->
+        <?=  $this->element('layout_buttons') ?>
         <?=  $this->Flash->render() ?>
         <?= $this->element('get_student') ?>
         <?= $this->fetch('content') ?>

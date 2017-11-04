@@ -6,7 +6,8 @@ use Cake\Core\Configure;
     <div class="container-fluid">
         <!-- begin mobile sidebar expand / collapse button -->
         <div class="navbar-header">
-            <a href="index.html" class="navbar-brand"> <?= Configure::read('Application.name') ?> <small style="font-style: italic"> <?= Configure::read('Application.type') ?> </small> </a>
+            <?= $this->Html->link(Configure::read('Application.name').'<small style="font-style: italic"> '.Configure::read('Application.type').' </small> ','/',['class'=>'navbar-brand','escape'=>false]) ?>
+            <a href="index.html" class="navbar-brand"> </a>
             <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
