@@ -7,6 +7,7 @@
  */
 
 namespace App\Controller;
+use App\Utility\Updater;
 use Cake\Core\Configure;
 use Cake\Filesystem\File;
 use Cake\Filesystem\Folder;
@@ -194,35 +195,42 @@ class DashboardController extends AppController
         if ($this->request->is(['POST'])) {
 
             if (!extension_loaded('zip')) {
-                $this->Flash->error('Please load the zip extension fo this feature to work');
+                $this->Flash->error('Please this feature requires the zip extension to work. Install php zip extension and try again');
                 return;
             }
+            $submittedFile = $this->request->getData('file');
 
-            //debug($this->request->getData()); exit(1);
-            $uploadFile = explode('.',$this->request->getData('file')['name']); // extract the file name // impro
+            $submittedFile = pathinfo($submittedFile['name']);
 
+            if ( empty($submittedFile['extension']) OR $submittedFile['extension'] !== 'zip' ) {
+                $this->Flash->error('Please the update is a zip file and not '.$submittedFile['extension']);
+                return;
+            }
             // extracting the files
             $zip = new \ZipArchive();
             if ($zip->open($this->request->getData('file')['tmp_name'] ) === TRUE) {
                 $zip->extractTo(TMP);
                 $zip->close();
                 // read the file from the temp dir
-                $updateFolder = new Folder(TMP.$uploadFile[0]);
-                //debug($updateFolder);
 
-                //debug($updateFolder->delete()); exit;
+                $updater = new Updater(TMP.$submittedFile['filename']);
+                try {
+                    if (!$updater->runMigrations() ) {
+                        throw new \Exception;
+                    }
 
-                $updateFolder->copy([
-                    'to' => APP,
-                    'scheme' => Folder::MERGE
-                ]);
+                    if ( !$updater->copyAppFiles()) {
+                        throw new \Exception;
+                    }
+                    $updater->finalizeUpdate();
 
-                if ((new Folder(TMP.$uploadFile[0]))->delete() ) {
-
-                    $this->Flash->success(__('The application has been successfully updated'));
-
+                    if ( $updater->removeUpdateFile()) {
+                        $this->Flash->success(__('The application has been successfully updated'));
+                    }
+                } catch ( \Exception $e ) {
+                    $this->Flash->error(__('An error occurred while running update please try again later '));
+                    $updater->removeUpdateFile();
                 }
-
             } else {
                 $this->Flash->error(__('The files could not be extracted'));
             }
@@ -232,22 +240,32 @@ class DashboardController extends AppController
 
     public function uploadBannerImage()
     {
+        try {
+            if ( $this->request->is(['patch', 'post', 'put'])) {
+                // check if upload
+                //debug($this->request->data); exit;
+                if (empty($this->request->getData('banner')['name'])) {
+                    $this->Flash->error(__('No file selected.'));
+                    return $this->redirect($this->request->referer());
+                }
+                // check if folder is writable
+                //if ( (new Folder(WWW_ROOT.'img')))
+                $file = new File(WWW_ROOT.'img/image-banner.png');
+                if ( $file->exists() ) {
+                    $file->delete();
+                }
+                if ( @move_uploaded_file($this->request->getData('banner')['tmp_name'], WWW_ROOT.'/img/image-banner.png') ) {
+                    $this->Flash->success(__('File was successfully uploaded'));
+                    return $this->redirect(['action'=>'settings']);
+                } else {
+                    $this->Flash->error(__('An Error occurred uploading this image. Please try again.'));
+                    return $this->redirect(['action'=>'settings']);
+                }
+            }
 
-        if ( $this->request->is(['patch', 'post', 'put'])) {
-            // check if upload
-            //debug($this->request->data); exit;
-            if (empty($this->request->getData('banner')['name'])) {
-                $this->Flash->error(__('No file selected.'));
-                return $this->redirect($this->request->referer());
-            }
-            $file = new File(WWW_ROOT.'img/image-banner.png');
-            if ( $file->exists() ) {
-                $file->delete();
-            }
-            if ( move_uploaded_file($this->request->getData('banner')['tmp_name'], WWW_ROOT.'/img/image-banner.png') ) {
-                $this->Flash->success(__('File was successfully uploaded'));
-                return $this->redirect($this->request->referer());
-            }
+        } catch (\Exception $e ) {
+            $this->Flash->success(__('An Error occurred uploading this image. Please try again.'));
+            return $this->redirect(['action'=>'settings']);
         }
     }
 }

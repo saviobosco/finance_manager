@@ -106,8 +106,8 @@
         });
 
 
-        $('#add-new-fee').submit(function(e){
-
+        // todo : work on this later
+        $('#add-new-f').submit(function(e){
             var thisForm = this;
             e.preventDefault();
             swal({
@@ -136,7 +136,6 @@
                             success: function(data,status){
                                 result = data;
                                 if ( status === 200 ) {
-
                                     setTimeout(function(){
                                         swal(result);
                                     }, 2000);
@@ -152,7 +151,6 @@
                     }
                 }
             );
-            //$('#add-new-fee').submit();
         });
 
         /*$('#add-new-fee').on('submit',function(event){

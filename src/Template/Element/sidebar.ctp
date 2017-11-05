@@ -357,7 +357,7 @@
                         ]) ?>
                     </li>
                     <li>
-                        <?= $this->html->link('Update',[
+                        <?= $this->html->link('Update App',[
                             'plugin'=>null,
                             'controller'=>'Dashboard',
                             'action' => 'update'

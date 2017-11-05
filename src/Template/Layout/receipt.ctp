@@ -66,4 +66,12 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 <!-- end page container -->
 
 </body>
+<script>
+    $(document).ready(function() {
+       // get the student copy and append to school copy
+        var studentCopy = $('#student-copy');
+        var schoolCopy = $('#school-copy');
+        schoolCopy.append(studentCopy.html())
+    });
+</script>
 </html>

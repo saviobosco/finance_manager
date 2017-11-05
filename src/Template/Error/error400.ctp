@@ -4,6 +4,9 @@ use Cake\Error\Debugger;
 
 $this->layout = 'error';
 
+if ($this->request->session()->read('Auth.User.id')) {
+    $this->layout = 'loggedInError';
+}
 if (Configure::read('debug')):
     $this->layout = 'dev_error';
 

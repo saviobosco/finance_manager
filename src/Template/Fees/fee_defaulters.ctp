@@ -30,6 +30,17 @@ $this->Form->setTemplates($formTemplates);
                     <?= $this->Form->end() ?>
                 </div>
 
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Session</th>
+                        <td> <?= ($this->request->getQuery('session_id')) ? @$sessions[$this->request->getQuery('session_id')] : 'All' ?> </td>
+                        <th> Class </th>
+                        <td> <?= ($this->request->getQuery('class_id')) ? @$classes[$this->request->getQuery('class_id')] : 'All' ?> </td>
+                        <th> Term </th>
+                        <td> <?= ($this->request->getQuery('term_id')) ? @$terms[$this->request->getQuery('term_id')] : 'All' ?> </td>
+                    </tr>
+                </table>
+
                 <?php
                 $getQuery = $this->request->getQuery();
                 if ( $compulsoryFees ) {

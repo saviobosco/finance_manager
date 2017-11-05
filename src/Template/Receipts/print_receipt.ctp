@@ -11,8 +11,8 @@ $this->layout = 'receipt';
 
                 <div class="row">
                     <div class="col-sm-6">
-                        <p style="color: black"> Student's Copy</p>
-                        <div >
+                        <p style="color: black">Student Copy</p>
+                        <div id="student-copy">
                             <table class="">
                                 <thead>
                                 <tr>
@@ -58,6 +58,13 @@ $this->layout = 'receipt';
                                     <td> <?= $this->Currency->displayCurrency($this->Payment->calculateFeesBalance($receipt->student_fee_payments)) ?></td>
                                 </tr>
                             </table>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <p style="color: black"> School Copy</p>
+                        <div id="school-copy">
+
                         </div>
                     </div>
 
