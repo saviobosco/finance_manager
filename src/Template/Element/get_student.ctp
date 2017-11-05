@@ -14,7 +14,7 @@
                 <div class='input-group'>
                     <div class='input-group-btn'>
                     </div>
-                    <input type='text' class='form-control' id='admissionNumber' placeholder='Student Admission Number' />
+                    <input type='text' class='form-control' id='search-input' placeholder='Student Admission Number' />
                     <div class='input-group-btn'>
                         <input type='submit' class='btn btn-success' value='Get Student'>
                     </div>
@@ -32,9 +32,14 @@
     var handleGetStudent = function () {
         $('#getStudent').submit(function(event){
             event.preventDefault();
+
             // check for url to use
-            $()
-            var admissionNumber = $('input[id=\"admissionNumber\"]');
+            var admissionNumber = $('input[id=search-input]');
+            if ( admissionNumber.length === 0 ) {
+                console.log('error','cannot be empty');
+                return;
+            }
+
             $.ajax({
                 type: "GET",
             url: '<?= $this->Url->build(['plugin'=>null,'controller'=>'Students','action'=>'get_student_by_ajax'], true) ?>',

@@ -18,12 +18,12 @@
                     echo $this->Form->control('id',['label' => 'Admission Number','type'=>'text']);
                     echo $this->Form->control('first_name');
                     echo $this->Form->control('last_name');
-                    echo $this->Form->control('date_of_birth');
                     echo $this->Form->label('Gender');
                     echo $this->Form->radio('gender',[
                         ['value' => 'male', 'text' => 'Male',],
                         ['value' => 'female', 'text' => 'Female',]
                     ],['hiddenField'=>false,'label'=>true,'templates'=>['input' => '<input type="{{type}}" name="{{name}}"{{attrs}}/>',]]);
+                    echo $this->Site->datePickerInput('date_of_birth');
                     //echo $this->Form->control('state_id');
                     echo $this->Form->control('class_id');
                     echo $this->Form->control('religion_id',['options'=>$religions]);
@@ -34,7 +34,7 @@
                     echo $this->Form->control('guardian_phone_number');
                     ?>
                 </fieldset>
-                <?= $this->Form->button(__('Submit')) ?>
+                <?= $this->Form->button(__('Add Student'),['class'=>'btn btn-primary']) ?>
                 <?= $this->Form->end() ?>
             </div>
         </div>

@@ -2,6 +2,8 @@
 namespace App\Model\Table;
 
 use Cake\Datasource\EntityInterface;
+use Cake\Event\Event;
+use Cake\I18n\Date;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -150,6 +152,20 @@ class StudentsTable extends Table
 
         return $rules;
     }
+
+    /***
+     * @param Event $event
+     * @param $data
+     * The function is fired by the cakephp system automatically before a
+     * request data is converted to entities
+     */
+    public function beforeMarshal(Event $event, $data )
+    {
+        if ( !empty($data['date_of_birth'] )) {
+            $data['date'] = new Date($data['date_of_birth']); // Converts the birth date Date properly
+        }
+    }
+
 
     public function deleteStudent(EntityInterface $student )
     {
