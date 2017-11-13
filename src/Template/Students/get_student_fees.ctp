@@ -18,9 +18,9 @@ $this->Form->templates($formTemplates);
                         <?= $this->Form->create('',['class'=>'form-inline','type'=>'GET']) ?>
                         <div class="form-group">
                             <?= $this->Form->hidden('student_id',['value'=>$student->id]) ?>
-                            <?= $this->Form->input('session_id',['options' => $sessions,'class'=>'form-control','data-select-id'=>'school','label'=>['text'=>' Change Session '],'value'=>@$this->SearchParameter->getDefaultValue($this->request->query['session_id'])]); ?>
-                            <?= $this->Form->input('class_id',['options' => $classes,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Class'],'value'=>@$this->SearchParameter->getDefaultValue($this->request->query['class_id'])]); ?>
-                            <?= $this->Form->input('term_id',['empty' => 'All','options' => $terms,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Term'],'value'=>@$this->SearchParameter->getDefaultValue($this->request->query['term_id'])]); ?>
+                            <?= @$this->Form->input('session_id',['empty' => 'All','options' => $sessions,'class'=>'form-control','data-select-id'=>'school','label'=>['text'=>' Change Session '],'value'=>($this->request->query['session_id']) ? $this->request->query['session_id'] : '']); ?>
+                            <?= @$this->Form->input('class_id',['empty' => 'All','options' => $classes,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Class'],'value'=>($this->request->query['class_id']) ? $this->request->query['class_id'] : '' ]); ?>
+                            <?= @$this->Form->input('term_id',['empty' => 'All','options' => $terms,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Term'],'value'=>($this->request->query['term_id']) ? $this->request->query['term_id'] : '']); ?>
                             <?= $this->Form->submit(__('change'),[
                                 'templates' => [
                                     'submitContainer' => '{{content}}'
@@ -189,7 +189,6 @@ $this->Form->templates($formTemplates);
                 amountToPay = Number(input.attr('data-amount-to-pay'));
                 console.log(inputValue);
                 if ( inputValue > amountToPay ) {
-                    console.log(index + 'has an issue');
                     input.closest('div.input-group').addClass('has-error has-feedback');
                 }else if(input.closest('div.input-group').hasClass('has-error has-feedback')){
                     input.closest('div.input-group').removeClass('has-error has-feedback');

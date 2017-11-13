@@ -17,6 +17,10 @@
                     <?= $this->Html->link('Fees Defaulters',['controller'=>'Fees','action'=>'feeDefaulters'],['class'=>'btn btn-danger m-r-15']) ?>
                     <?= $this->Html->link('Fees Query',['controller'=>'Fees','action'=>'feesQuery'],['class'=>'btn btn-info m-r-15']) ?>
                 </div>
+
+
+
+
                 <table id="data-table" class="table table-bordered table-responsive">
                     <thead>
                     <tr>

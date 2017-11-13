@@ -20,9 +20,9 @@ $this->Form->setTemplates($formTemplates);
                 <div class="m-b-15">
                     <?= $this->Form->create('',['class'=>'form-inline','type'=>'GET']) ?>
                     <div class="form-group">
-                        <?= $this->Form->control('session_id',['empty'=>'All', 'options' => $sessions,'class'=>'form-control','data-select-id'=>'school','label'=>['text'=>' Change Session '],'value'=>@$this->SearchParameter->getDefaultValue($this->request->query['session_id'])]); ?>
-                        <?= $this->Form->control('class_id',['empty'=>'All','options' => $classes,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Class'],'value'=>@$this->SearchParameter->getDefaultValue($this->request->query['class_id'])]); ?>
-                        <?= $this->Form->control('term_id',['empty' => 'All','options' => $terms,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Term'],'value'=>@$this->SearchParameter->getDefaultValue($this->request->query['term_id'])]); ?>
+                        <?= $this->Form->control('session_id',['empty'=>'All', 'options' => $sessions,'class'=>'form-control','data-select-id'=>'school','label'=>['text'=>' Change Session '],'value'=>($this->request->getQuery('session_id')) ? $this->request->getQuery('session_id') : '']); ?>
+                        <?= $this->Form->control('class_id',['empty'=>'All','options' => $classes,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Class'],'value'=>($this->request->getQuery('class_id')) ? $this->request->getQuery('class_id') : '' ]); ?>
+                        <?= $this->Form->control('term_id',['empty' => 'All','options' => $terms,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Term'],'value'=>($this->request->getQuery('term_id') ? $this->request->getQuery('term_id') : '') ]); ?>
                         <?= $this->Form->submit(__('change'),[
                             'class'=>'btn btn-primary']) ?>
                     </div>

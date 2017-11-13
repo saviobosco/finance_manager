@@ -15,7 +15,7 @@
                         <?= $this->Form->create($expenditure) ?>
                         <fieldset>
                             <?php
-                            echo $this->Form->control('expenditure_category_id', ['options' => $expenditureCategories]);
+                            echo $this->Form->control('expenditure_category_id', ['options' => $expenditureCategories,'required'=>true]);
                             echo $this->Form->label('Amount');
                             echo $this->Form->control('amount',[
                                 'id' => 'amount',

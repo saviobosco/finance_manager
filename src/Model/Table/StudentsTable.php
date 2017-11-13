@@ -104,9 +104,8 @@ class StudentsTable extends Table
             ->notEmpty('last_name');
 
         $validator
-            ->date('date_of_birth')
-            ->requirePresence('date_of_birth', 'create')
-            ->notEmpty('date_of_birth');
+            //->requirePresence('date_of_birth', 'create')
+            ->allowEmpty('date_of_birth');
 
         $validator
             ->requirePresence('gender', 'create')

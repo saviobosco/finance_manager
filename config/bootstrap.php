@@ -217,6 +217,11 @@ try {
 } catch (\Exception $e) {
     Log::alert('application configuration file could not be loaded');
 }
+try {
+    Configure::load('registration', 'default');
+} catch (\Exception $e) {
+    Log::alert('application configuration file could not be loaded');
+}
 use App\Event\PaymentsStatistic;
 use Cake\Event\EventManager;
 

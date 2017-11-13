@@ -20,7 +20,7 @@ class Updater
 {
     private $updateSrcPath ;
 
-    private $updateDestPath = WWW_ROOT;
+    private $updateDestPath = ROOT;
 
     /**
      * @param $updateSrcPath

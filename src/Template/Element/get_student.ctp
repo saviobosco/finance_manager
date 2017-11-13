@@ -35,10 +35,14 @@
 
             // check for url to use
             var admissionNumber = $('input[id=search-input]');
-            if ( admissionNumber.length === 0 ) {
-                console.log('error','cannot be empty');
+            if ( admissionNumber.val() === '' ) {
+                console.log(' Value is empty');
+                admissionNumber.closest('div.input-group').addClass('has-error has-feedback');
                 return;
-            }
+            }else if(admissionNumber.closest('div.input-group').hasClass('has-error has-feedback')){
+            admissionNumber.closest('div.input-group').removeClass('has-error has-feedback');
+        }
+
 
             $.ajax({
                 type: "GET",
@@ -47,10 +51,15 @@
                 cache:false,
                 data:{ 'id':admissionNumber.val()},
             beforeSend:function(){
-                $('#get-student-ajax-return').html('<div class=\"alert alert-info m-t-10\"> <i class=\"fa fa-spinner fa-spin fa-1x fa-fw\"></i> Fetching student Record </div>');
+                $('#get-student-ajax-return').html('<div class="alert alert-info m-t-10"> <i class="fa fa-spinner fa-spin fa-1x fa-fw"></i> Fetching student Record </div>');
             },
             success: function(data,status){
                 $('#get-student-ajax-return').html(data);
+            },
+            error: function(event){
+                if ( event.status === 403){
+                    $('#get-student-ajax-return').html('<div class="alert alert-danger m-t-10"> <i class="fa fa-warning "></i> An Error Occurred while processing your request. Please try again later </div>');
+                }
             },
             dataType: 'text'
         });

@@ -13,6 +13,7 @@ use Cake\Validation\Validator;
  *
  * @property \App\Model\Table\FeesTable|\Cake\ORM\Association\HasMany $Fees
  * @property \App\Model\Table\StudentsTable|\Cake\ORM\Association\HasMany $Students
+ * @property \App\Model\Table\BlocksTable|\Cake\ORM\Association\BelongsTo $Blocks
  *
  * @method \App\Model\Entity\Class get($primaryKey, $options = [])
  * @method \App\Model\Entity\Class newEntity($data = null, array $options = [])
@@ -58,6 +59,11 @@ class ClassesTable extends Table
         $this->hasMany('Students', [
             'foreignKey' => 'class_id'
         ]);
+        $this->belongsTo('Blocks', [
+            'foreignKey' => 'block_id'
+        ]);
+
+
     }
 
     /**

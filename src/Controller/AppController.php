@@ -15,7 +15,9 @@
 namespace App\Controller;
 
 use Cake\Controller\Controller;
+use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\I18n\Date;
 use Muffin\Footprint\Auth\FootprintAwareTrait;
 
 /**
@@ -48,6 +50,11 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
         $this->loadComponent('CakeDC/Users.UsersAuth');
+        /*$this->loadComponent('SoftwareRegistration',[
+            'allowedActions' => [
+                'registerApplication'
+            ]
+        ]);*/
 
         /*
          * Enable the following components for recommended CakePHP security settings.

@@ -60,7 +60,8 @@ class ClassesController extends AppController
             }
             $this->Flash->error(__('The class could not be saved. Please, try again.'));
         }
-        $this->set(compact('class'));
+        $blocks = $this->Classes->Blocks->find('list')->toArray();
+        $this->set(compact('class','blocks'));
         $this->set('_serialize', ['class']);
     }
 
@@ -85,7 +86,8 @@ class ClassesController extends AppController
             }
             $this->Flash->error(__('The class could not be saved. Please, try again.'));
         }
-        $this->set(compact('class'));
+        $blocks = $this->Classes->Blocks->find('list')->toArray();
+        $this->set(compact('class','blocks'));
         $this->set('_serialize', ['class']);
     }
 

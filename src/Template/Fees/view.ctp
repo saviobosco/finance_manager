@@ -22,15 +22,15 @@
                     </tr>
                     <tr>
                         <th scope="row"><?= __('Term') ?></th>
-                        <td><?= $fee->has('term') ? $this->Html->link($fee->term->term, ['controller' => 'Terms', 'action' => 'view', $fee->term->id]) : '' ?></td>
+                        <td><?= $fee->term->term ?></td>
                     </tr>
                     <tr>
                         <th scope="row"><?= __('Class') ?></th>
-                        <td><?= $fee->has('class') ? $this->Html->link($fee->class->class, ['controller' => 'Classes', 'action' => 'view', $fee->class->id]) : '' ?></td>
+                        <td><?= $fee->class->class ?></td>
                     </tr>
                     <tr>
                         <th scope="row"><?= __('Session') ?></th>
-                        <td><?= $fee->has('session') ? $this->Html->link($fee->session->session, ['controller' => 'Sessions', 'action' => 'view', $fee->session->id]) : '' ?></td>
+                        <td><?= $fee->session->session ?></td>
                     </tr>
                     <tr>
                         <th scope="row"><?= __('Created By') ?></th>

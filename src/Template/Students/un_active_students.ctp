@@ -21,7 +21,7 @@ $this->Form->setTemplates($formTemplates);
                     <div class="col-sm-12">
                         <?= $this->Form->create('',['class'=>'form-inline','type'=>'GET']) ?>
                         <div class="form-group">
-                            <?= $this->Form->control('class_id',['options' => $classes,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Class'],'value'=>@$this->SearchParameter->getDefaultValue($this->request->query['class_id'])]); ?>
+                            <?= $this->Form->control('class_id',['empty'=>'All', 'options' => $classes,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Class'],'value'=>($this->request->query['class_id']) ? $this->request->query['class_id'] : '' ]); ?>
                             <?= $this->Form->submit(__('change'),[
                                 'templates' => [
                                     'submitContainer' => '{{content}}'

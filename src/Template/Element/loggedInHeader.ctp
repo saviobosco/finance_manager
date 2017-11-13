@@ -18,6 +18,8 @@ use Cake\Core\Configure;
 
         <!-- begin header navigation right -->
         <ul class="nav navbar-nav navbar-right">
+            <li class="navbar-form full-width">
+            </li>
             <li class="dropdown navbar-user">
                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
                     <?= $this->Site->displayAdminPhoto($this->request->session()->read('Auth.User.photo')) ?>

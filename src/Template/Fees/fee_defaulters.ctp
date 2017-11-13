@@ -20,9 +20,9 @@ $this->Form->setTemplates($formTemplates);
                 <div class="m-b-15">
                     <?= $this->Form->create('',['class'=>'form-inline','type'=>'GET']) ?>
                     <div class="form-group">
-                        <?= $this->Form->control('session_id',['empty' => 'All','options' => $sessions,'class'=>'form-control','data-select-id'=>'school','label'=>['text'=>' Change Session '],'value'=>@$this->SearchParameter->getDefaultValue($this->request->query['session_id'])]); ?>
-                        <?= $this->Form->control('class_id',['empty' => 'All','options' => $classes,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Class'],'value'=>@$this->SearchParameter->getDefaultValue($this->request->query['class_id'])]); ?>
-                        <?= $this->Form->control('term_id',['empty' => 'All','options' => $terms,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Term'],'value'=>@$this->SearchParameter->getDefaultValue($this->request->query['term_id'])]); ?>
+                        <?= $this->Form->control('session_id',['empty' => 'All','options' => $sessions,'class'=>'form-control','data-select-id'=>'school','label'=>['text'=>' Change Session '],'value'=>($this->request->getQuery('session_id')) ? $this->request->getQuery('session_id') : '']); ?>
+                        <?= $this->Form->control('class_id',['empty' => 'All','options' => $classes,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Class'],'value'=>($this->request->getQuery('class_id') ? $this->request->getQuery('class_id') : '')]); ?>
+                        <?= $this->Form->control('term_id',['empty' => 'All','options' => $terms,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Term'],'value'=>($this->request->getQuery('term_id') ? $this->request->getQuery('term_id') : '' ) ]); ?>
                         <?= $this->Form->control('percentage',['options' => [''=>'Empty',25=>'25%',50=>'50%',75=>'75%'],'class'=>'form-control','label'=>['text'=>'Owing Percentage'],'value'=>($this->request->getQuery('percentage')) ? $this->request->getQuery('percentage') :'' ]); ?>
                         <?= $this->Form->submit(__('change'),[
                             'class'=>'btn btn-primary']) ?>
@@ -38,6 +38,8 @@ $this->Form->setTemplates($formTemplates);
                         <td> <?= ($this->request->getQuery('class_id')) ? @$classes[$this->request->getQuery('class_id')] : 'All' ?> </td>
                         <th> Term </th>
                         <td> <?= ($this->request->getQuery('term_id')) ? @$terms[$this->request->getQuery('term_id')] : 'All' ?> </td>
+                        <th> Owing Percentage </th>
+                        <td> <?= ($this->request->getQuery('percentage')) ? $this->request->getQuery('percentage').'%' : 'None' ?> </td>
                     </tr>
                 </table>
 
@@ -76,11 +78,12 @@ $this->Form->setTemplates($formTemplates);
                             // make some calculations
                             // output the required result
 
-                            $roundedStudentTotal = round($total / $feesTotal * 100 );
-
-                            //debug($total.' '.$roundedStudentTotal);
+                            $studentOwingPercentage = round($total / $feesTotal * 100 );
+                            //debug('total '.$total);
+                            //debug('total Fees to Pay '.$feesTotal);
+                            //debug($studentOwingPercentage);
                         ?>
-                            <? if ( $roundedStudentTotal >= $getQuery['percentage'] ) : ?>
+                            <? if ( $studentOwingPercentage >= $getQuery['percentage'] ) : ?>
                             <tr>
                                 <td>
                                     <?= $defaulter ?>

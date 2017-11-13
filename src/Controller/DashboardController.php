@@ -248,13 +248,19 @@ class DashboardController extends AppController
                     $this->Flash->error(__('No file selected.'));
                     return $this->redirect($this->request->referer());
                 }
+                $imageDetails = pathinfo($this->request->getData('banner')['name']);
+
+                if ($imageDetails['extension'] !== 'png') {
+                    $this->Flash->error(__('Image must be a .png file .'));
+                    return $this->redirect($this->request->referer());
+                }
                 // check if folder is writable
                 //if ( (new Folder(WWW_ROOT.'img')))
                 $file = new File(WWW_ROOT.'img/image-banner.png');
                 if ( $file->exists() ) {
                     $file->delete();
                 }
-                if ( @move_uploaded_file($this->request->getData('banner')['tmp_name'], WWW_ROOT.'/img/image-banner.png') ) {
+                if ( move_uploaded_file($this->request->getData('banner')['tmp_name'], WWW_ROOT.'img/image-banner.png') ) {
                     $this->Flash->success(__('File was successfully uploaded'));
                     return $this->redirect(['action'=>'settings']);
                 } else {
@@ -267,5 +273,10 @@ class DashboardController extends AppController
             $this->Flash->success(__('An Error occurred uploading this image. Please try again.'));
             return $this->redirect(['action'=>'settings']);
         }
+    }
+
+    public function registerApplication()
+    {
+
     }
 }
